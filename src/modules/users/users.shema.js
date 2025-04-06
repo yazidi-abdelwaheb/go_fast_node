@@ -70,7 +70,6 @@ const userSchema = new Schema(
     isActive: { type: Boolean, default: false },
     groupId: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: "Groups",
     },
     lang: {
