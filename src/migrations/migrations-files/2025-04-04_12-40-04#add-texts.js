@@ -1,7 +1,7 @@
 //import { askQuestion } from "../utils.js";
 
 import { setupMongoServer } from "../../config/db.config.js";
-import Texts from "../../modules/texts/text.shema.js";
+import Texts from "../../modules/texts/text.schema.js";
 import { loadData } from "../utils.js";
 
 const addTextsMigration = async () => {

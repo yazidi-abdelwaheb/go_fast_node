@@ -1,4 +1,4 @@
-import Orders from "./orders.shema.js";
+import Orders from "./orders.schema.js";
 import { errorCatch, getPaginatedData } from "../../shared/shared.exports.js";
 import { Types } from "mongoose";
 

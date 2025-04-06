@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import Texts from "./text.shema.js";
+import Texts from "./text.schema.js";
 import {
   customValidatorId,
   customValidatorUniqueValueForInsert,

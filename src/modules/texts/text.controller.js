@@ -1,4 +1,4 @@
-import Texts from "./text.shema.js";
+import Texts from "./text.schema.js";
 import {
   CustomError,
   errorCatch,

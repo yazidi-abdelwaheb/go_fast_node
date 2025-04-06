@@ -1,4 +1,4 @@
-import Products from "./products.shema.js";
+import Products from "./products.schema.js";
 import {
   CustomError,
   errorCatch,

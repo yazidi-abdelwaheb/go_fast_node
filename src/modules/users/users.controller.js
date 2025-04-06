@@ -1,7 +1,7 @@
-import Users from "./users.shema.js";
+import Users from "./users.schema.js";
 import { errorCatch, getPaginatedData } from "../../shared/shared.exports.js";
 import crypto from "crypto";
-import GroupFeature from "../groups/group-feature.shema.js";
+import GroupFeature from "../groups/group-feature.schema.js";
 import { Types } from "mongoose";
 const model = Users;
 

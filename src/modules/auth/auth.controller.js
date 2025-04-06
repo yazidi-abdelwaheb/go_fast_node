@@ -16,8 +16,8 @@ import {
   ATTEMPTS_OF_CODE_VALIDATION,
   ATTEMPTS_OF_CODE_VALIDATION_SUPER,
 } from "../../shared/shared.exports.js";
-import Users from "../users/users.shema.js";
-import GroupFeature from "../groups/group-feature.shema.js";
+import Users from "../users/users.schema.js";
+import GroupFeature from "../groups/group-feature.schema.js";
 
 export default class AuthController {
   static async login(req, res) {
@@ -355,7 +355,7 @@ const updateUserCodeAndSendMail = async (
 
 /**
  * function to verify code validity
- * @param {object} user Users shema object
+ * @param {object} user Users schema object
  * @param {Strign} code code send to  user
  */
 const verifyCode = async (user, code) => {

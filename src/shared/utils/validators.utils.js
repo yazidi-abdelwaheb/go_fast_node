@@ -29,7 +29,7 @@ export const checkValidationErrors = (req, res, next) => {
 import { Types } from "mongoose";
 /**
  * custom validator unique value for insert
- * @param {shema} model
+ * @param {schema} model
  * @param {string} field
  * @param {object} query
  * @returns {Promise<boolean|Error>}
@@ -48,7 +48,7 @@ export const customValidatorUniqueValueForInsert = async (
 
 /**
  * custom validator unique value for update
- * @param {shema} model
+ * @param {schema} model
  * @param {string} field
  * @param {object} query
  * @param {string} reqId
@@ -69,17 +69,17 @@ export const customValidatorUniqueValueForUpdate = async (
 
 /**
  * custom validator Id
- * @param {shema} model shema object
+ * @param {schema} model schema object
  * @param {string} id id of the model
- * @param {string} shema_name shema name or description of the model
+ * @param {string} schema_name schema name or description of the model
  * @returns {Promise<boolean|Error>}
  */
-export const customValidatorId = async (model, id, shema_name) => {
+export const customValidatorId = async (model, id, schema_name) => {
   const data = await model.findOne({
     _id: new Types.ObjectId(id),
   });
   if (!data) {
-    throw new Error(`${shema_name} does not exist`);
+    throw new Error(`${schema_name} does not exist`);
   }
   return true;
 };

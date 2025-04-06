@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import Users from "../users/users.shema.js";
+import Users from "../users/users.schema.js";
 import { customValidatorUniqueValueForInsert } from "../../shared/shared.exports.js";
 
 export const registeryValidators = [

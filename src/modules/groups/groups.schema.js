@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const GroupShema = new Schema(
+const Groupschema = new Schema(
   {
     companyId: {
       type: Schema.Types.ObjectId,
@@ -29,6 +29,6 @@ const GroupShema = new Schema(
   { timestamps: true }
 );
 
-const Groups = model("Groups", GroupShema);
+const Groups = model("Groups", Groupschema);
 
 export default Groups;

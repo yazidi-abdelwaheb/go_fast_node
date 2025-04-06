@@ -4,9 +4,9 @@ import {
   featureStatus,
   errorCatch,
 } from "../../shared/shared.exports.js";
-import Features from "../features/features.shema.js";
-import UserFeature from "../user-feature/user-feature.shema.js";
-import GroupFeature from "../groups/group-feature.shema.js";
+import Features from "../features/features.schema.js";
+import UserFeature from "../user-feature/user-feature.schema.js";
+import GroupFeature from "../groups/group-feature.schema.js";
 
 export default class MenuController {
   static async getMenu(req, res) {

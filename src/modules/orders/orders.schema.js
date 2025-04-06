@@ -3,7 +3,7 @@ import {
   Orderstatus,
   generateUniqueCodeForOrders,
 } from "../../shared/shared.exports.js";
-const Ordershema = new Schema(
+const Orderschema = new Schema(
   {
     productId: {
       type: Schema.Types.ObjectId,
@@ -59,15 +59,15 @@ const Ordershema = new Schema(
   { timestamps: true }
 );
 
-Ordershema.virtual("search").get(function () {
+Orderschema.virtual("search").get(function () {
   return `${this.distination.governament} ${this.distination.ville} ${this.client.fullname} ${this.client.phone_number} ${this.status}`;
 });
 
-Ordershema.pre("save", async function (next) {
+Orderschema.pre("save", async function (next) {
   this.shared_code = await generateUniqueCodeForOrders();
   next();
 });
 
-const Orders = model("Orders", Ordershema);
+const Orders = model("Orders", Orderschema);
 
 export default Orders;
