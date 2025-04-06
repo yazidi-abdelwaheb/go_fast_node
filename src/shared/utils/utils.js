@@ -172,7 +172,7 @@ export const getPaginatedData = async (
   const result = await model.aggregate(pipeline);
   const data = result[0]?.data || [];
   const totalElement = result[0]?.totalCount?.count || 0;
-  const totalPages = Math.ceil(totalElement / limit);
+  const totalPages = Math.ceil( totalElement / limit);
 
   return { data, totalElement, totalPages };
 };

@@ -38,7 +38,7 @@ const featureShema = new Schema(
     },
     link: {
       type: String,
-      minlength: 3,
+      minlength: 1,
       maxlength: 100,
       trim : true,
       lowercase : true,

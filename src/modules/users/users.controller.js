@@ -31,7 +31,7 @@ export default class UsersController {
       );
 
       res.status(200).json({
-        totalElement,
+        total : totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,
@@ -76,7 +76,7 @@ export default class UsersController {
         companyId: req.user.companyId,
         type: user.type,
         isActive: true,
-        groupId: user.groupId,
+        groupId: user.groupId._id,
         code: {
           key: "first_login",
         },

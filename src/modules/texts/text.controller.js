@@ -49,7 +49,7 @@ export default class TextsController {
       const limit = parseInt(req.query.limit, 10) || 10;
       const search = req.query.search || "";
 
-      const { data, totalElement, totalPages } = await getPaginatedData(
+      const { data,  totalElement, totalPages } = await getPaginatedData(
         model,
         page,
         limit,
@@ -60,7 +60,7 @@ export default class TextsController {
       );
 
       res.status(200).json({
-        totalElement,
+        total : totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,

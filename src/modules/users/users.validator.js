@@ -34,7 +34,7 @@ const userValidation = [
     .withMessage("First name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("First name must be between 2 and 20 characters"),
-  body("user.groupId")
+  body("user.groupId._id")
     .trim()
     .notEmpty()
     .withMessage("group Id  is required")
@@ -99,7 +99,7 @@ export const updateOneValidation = [
       );
     }),
   body("user.lang").custom(async (value) => {
-    if (!Object.values(UserLanguagesEnum).includes(value.toLowerCase())) {
+    if (value && !Object.values(UserLanguagesEnum).includes(value.toLowerCase())) {
       throw new Error("Invalid language.");
     }
     return true;

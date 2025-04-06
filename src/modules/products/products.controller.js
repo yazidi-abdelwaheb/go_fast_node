@@ -48,7 +48,7 @@ export default class ProductsController {
       );
 
       res.status(200).json({
-        totalElement,
+        total : totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,
