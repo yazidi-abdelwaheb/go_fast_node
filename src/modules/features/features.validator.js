@@ -6,6 +6,7 @@ import {
   customValidatorId,
   customValidatorUniqueValueForInsert,
   customValidatorUniqueValueForUpdate,
+  featureStatus,
 } from "../../shared/shared.exports.js";
 
 export const createOneValidation = [
@@ -43,7 +44,7 @@ export const createOneValidation = [
     .notEmpty()
     .withMessage("Status is required")
     .custom(async (value) => {
-      if (!Object.values(FeaturesStatusEnum).includes(value.toLowerCase())) {
+      if (!Object.values(featureStatus).includes(value)) {
         throw new Error("Status invalid");
       }
       return true;

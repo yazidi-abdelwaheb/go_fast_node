@@ -17,7 +17,7 @@ const routers = express.Router();
 routers.post("/login", Controller.login);
 // ****** Verify Login if super admin ******** //
 routers.post(
-  "/verify-login-super",
+  "/verif-account",
   verifyLoginSuperValidators,
   checkValidationErrors,
   Controller.verifyLoginSuper
