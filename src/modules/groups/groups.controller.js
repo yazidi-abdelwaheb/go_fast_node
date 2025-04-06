@@ -28,7 +28,7 @@ export default class GroupController {
       );
 
       res.status(200).json({
-        totalElement,
+        total : totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,
@@ -69,8 +69,9 @@ export default class GroupController {
         }
      */
     try {
-      const { group, groupFeatures } = req.body;
-
+      const { group, groupFeature } = req.body;
+      console.log(groupFeature);
+      
       /// Create a new group
       const newOne = await new Group({
         code: group.code,
@@ -79,11 +80,11 @@ export default class GroupController {
       }).save();
 
       /// Create a new groupFeatures
-      for await (const _groupFeature of groupFeatures) {
+      for await (const _groupFeature of groupFeature) {
         if (_groupFeature.featureId) {
           const newgroupFeature = new GroupFeature({
             companyId: new Types.ObjectId(req.user.companyId),
-            featureId: new Types.ObjectId(_groupFeature.featureId),
+            featureId: new Types.ObjectId(_groupFeature.featureId._id),
             groupId: new Types.ObjectId(newOne._id),
           });
           if (_groupFeature.list) {
@@ -162,15 +163,15 @@ export default class GroupController {
         }
      */
     try {
-      const { group, groupFeatures } = req.body;
+      const { group, groupFeature } = req.body;
       const _id = req.params.id;
       await Group.updateOne({ _id }, { code: group.code, label: group.label });
 
       await GroupFeature.deleteMany({ groupId: req.params.id });
-      for await (const _groupFeature of groupFeatures) {
+      for await (const _groupFeature of groupFeature) {
         if (_groupFeature.featureId) {
           const newgroupFeature = new GroupFeature({
-            featureId: new Types.ObjectId(_groupFeature.featureId),
+            featureId: new Types.ObjectId(_groupFeature.featureId._id),
             groupId: new Types.ObjectId(_id),
           });
           newgroupFeature.companyId = group.companyId;
@@ -221,10 +222,10 @@ export default class GroupController {
 
   static async get_groupFeatures(req, res) {
     try {
-      const _groupFeature = await GroupFeature.find({
+      const groupFeature = await GroupFeature.find({
         groupId: new Types.ObjectId(req.params.id),
       }).populate("featureId");
-      return res.status(200).json(_groupFeature);
+      return res.status(200).json(groupFeature);
     } catch (e) {
       return errorCatch(e, res);
     }

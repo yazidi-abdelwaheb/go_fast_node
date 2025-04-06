@@ -13,17 +13,17 @@ const userState = {
 Object.freeze(userState);
 
 const UserLanguagesEnum = {
-  en: "En",
-  fr: "Fr",
-  es: "Es",
-  ar: "Ar",
+  en: "en",
+  fr: "fr",
+  es: "es",
+  ar: "ar",
 };
 
 const UserStatusEnum = {
-  online : "Online",
-  away : "Away",
-  invisible : "In-Visible",
-  busy : "Busy",
+  online : "online",
+  away : "away",
+  invisible : "not-visible",
+  busy : "busy",
 };
 
 //****** FEATURES ENUMS *******

@@ -44,14 +44,14 @@ routers.post(
 );
 
 routers.post(
-  "/forget-password",
+  "/forgot-password",
   sendEmailValidators,
   checkValidationErrors,
   Controller.sendMailForgetPassword
 );
 
 routers.post(
-  "/validation-code-forget-password",
+  "/validation-code-forgot-password",
   forgetPasswordVerifyCodeValidators,
   checkValidationErrors,
   Controller.validationkeyForgetPassword

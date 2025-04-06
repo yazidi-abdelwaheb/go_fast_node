@@ -47,6 +47,6 @@ routers.delete(
   Controller.deleteOne
 );
 
-routers.get("/:id/group-features", Controller.get_groupFeatures);
+routers.get("/:id/group-feature", Controller.get_groupFeatures);
 
 export default routers;
