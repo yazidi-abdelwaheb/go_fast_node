@@ -1,0 +1,79 @@
+[
+  {
+    "key": "account_settings",
+    "fr": "Paramètres du compte",
+    "en": "Account Settings",
+    "es": "Configuración de la cuenta",
+    "ar": "إعدادات الحساب"
+  },
+  {
+    "key": "change_password",
+    "fr": "Changer le mot de passe",
+    "en": "Change Password",
+    "es": "Cambiar la contraseña",
+    "ar": "تغيير كلمة المرور"
+  },
+  {
+    "key": "current_password",
+    "fr": "Mot de passe actuel",
+    "en": "Current Password",
+    "es": "Contraseña actual",
+    "ar": "كلمة المرور الحالية"
+  },
+  {
+    "key": "new_password",
+    "fr": "Nouveau mot de passe",
+    "en": "New Password",
+    "es": "Nueva contraseña",
+    "ar": "كلمة المرور الجديدة"
+  },
+  {
+    "key": "confirm_new_password",
+    "fr": "Confirmer le nouveau mot de passe",
+    "en": "Confirm New Password",
+    "es": "Confirmar nueva contraseña",
+    "ar": "تأكيد كلمة المرور الجديدة"
+  },
+  {
+    "key": "save_changes",
+    "fr": "Enregistrer les modifications",
+    "en": "Save Changes",
+    "es": "Guardar cambios",
+    "ar": "حفظ التغييرات"
+  },
+  {
+    "key": "account_deleted",
+    "fr": "Compte supprimé",
+    "en": "Account Deleted",
+    "es": "Cuenta eliminada",
+    "ar": "تم حذف الحساب"
+  },
+  {
+    "key": "logout",
+    "fr": "Déconnexion",
+    "en": "Logout",
+    "es": "Cerrar sesión",
+    "ar": "تسجيل الخروج"
+  },
+  {
+    "key": "email_notifications",
+    "fr": "Notifications par e-mail",
+    "en": "Email Notifications",
+    "es": "Notificaciones por correo electrónico",
+    "ar": "إشعارات البريد الإلكتروني"
+  },
+  {
+    "key": "privacy_policy",
+    "fr": "Politique de confidentialité",
+    "en": "Privacy Policy",
+    "es": "Política de privacidad",
+    "ar": "سياسة الخصوصية"
+  },
+  {
+    "key": "terms_of_service",
+    "fr": "Conditions d'utilisation",
+    "en": "Terms of Service",
+    "es": "Términos de servicio",
+    "ar": "شروط الخدمة"
+  }
+]

@@ -1,0 +1,72 @@
+import express from "express";
+import Controller from "./auth.controller.js";
+import { checkValidationErrors , upload } from "../../shared/shared.exports.js";
+import { isAuth } from "../../middlewares/auth.middlewares.js";
+import {
+  registeryValidators,
+  forgetPasswordVerifyCodeValidators,
+  resetPasswordValidators,
+  sendEmailValidators,
+  activeAccountValidators,
+  verifyLoginSuperValidators,
+} from "./auth.validators.js";
+
+const routers = express.Router();
+
+// ****** Login ******** //
+routers.post("/login", Controller.login);
+// ****** Verify Login if super admin ******** //
+routers.post(
+  "/verify-login-super",
+  verifyLoginSuperValidators,
+  checkValidationErrors,
+  Controller.verifyLoginSuper
+);
+
+routers.post(
+  "/register",
+  registeryValidators,
+  checkValidationErrors,
+  Controller.registery
+);
+
+routers.post(
+  "/active-account",
+  activeAccountValidators,
+  checkValidationErrors,
+  Controller.activeAccount
+);
+
+routers.post(
+  "/send-mail-active-account",
+  sendEmailValidators,
+  Controller.sendMailActiveAccount
+);
+
+routers.post(
+  "/forget-password",
+  sendEmailValidators,
+  checkValidationErrors,
+  Controller.sendMailForgetPassword
+);
+
+routers.post(
+  "/validation-code-forget-password",
+  forgetPasswordVerifyCodeValidators,
+  checkValidationErrors,
+  Controller.validationkeyForgetPassword
+);
+
+routers.patch(
+  "/reset-password",
+  resetPasswordValidators,
+  checkValidationErrors,
+  Controller.resetPassword
+);
+
+routers.patch(
+  "/update-password",
+  Controller.updatePassword
+);
+
+export default routers;
