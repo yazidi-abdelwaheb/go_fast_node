@@ -39,7 +39,7 @@
         }
       }
     },
-    "/api/auth/verif-account-super": {
+    "/api/auth/verify-login-super": {
       "post": {
         "summary": "Verify login super",
         "description": "",
@@ -230,6 +230,28 @@
         }
       }
     },
+    "/api/auth/update-password": {
+      "patch": {
+        "summary": "update password before 1st login   * *",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "password": "12345678a",
+                "email": "example@gmail.com"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/": {
       "get": {
         "summary": "Get list of users.",
@@ -297,12 +319,31 @@
                   "last_name": "Smith",
                   "email": "john@example.com",
                   "password": "1234567a",
-                  "companyId": "companyId",
                   "type": "user",
                   "groupId": "group Id"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "summary": "Get Info user connected",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -370,7 +411,7 @@
                   "email": "john@example.com",
                   "password": "1234567a",
                   "type": "user",
-                  "groupId": "group Id",
+                  "groupId": "groupId",
                   "lang": "en"
                 }
               }
@@ -390,26 +431,6 @@
               "type": "string"
             }
           },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/users/me": {
-      "get": {
-        "summary": "Get Info user connected",
-        "description": "",
-        "parameters": [
           {
             "name": "authorization",
             "in": "header",
@@ -497,9 +518,39 @@
         }
       }
     },
+    "/api/users/status": {
+      "patch": {
+        "summary": "update Status user conected    * *",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "status": "online"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/features/": {
       "get": {
-        "summary": "Get all Feature .",
+        "summary": "Get all Feature pagination .",
         "description": "",
         "parameters": [
           {
@@ -576,6 +627,26 @@
         }
       }
     },
+    "/api/features/all": {
+      "get": {
+        "summary": "Get all features.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/features/link": {
       "post": {
         "description": "",
@@ -611,6 +682,7 @@
     },
     "/api/features/parents": {
       "get": {
+        "summary": "Get list parents Feature .",
         "description": "",
         "parameters": [
           {
@@ -792,7 +864,7 @@
               "example": {
                 "group": {
                   "code": "group",
-                  "title": "Group"
+                  "label": "Group"
                 },
                 "groupFeatures": [
                   {
@@ -807,6 +879,25 @@
                 ]
               }
             }
+          }
+        }
+      }
+    },
+    "/api/groups/all": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -870,7 +961,7 @@
               "example": {
                 "group": {
                   "code": "group",
-                  "title": "Group"
+                  "label": "Group"
                 },
                 "groupFeatures": [
                   {
@@ -1435,7 +1526,7 @@
         }
       }
     },
-    "/api/menus/": {
+    "/api/menu/": {
       "get": {
         "description": "",
         "parameters": [
@@ -1454,7 +1545,7 @@
         }
       }
     },
-    "/api/menus/features": {
+    "/api/menu/features": {
       "get": {
         "description": "",
         "parameters": [

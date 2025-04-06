@@ -32,7 +32,7 @@ const getValidatedInput = async (field, message) => {
   let value;
   while (true) {
     value = await askQuestion(message);
-    const error = validateInput(field, value);
+    const error = await validateInput(field, value);
     if (!error) break;
     console.log(`${error}`);
   }
@@ -58,16 +58,14 @@ const createSuperAdminMigration = async() => {
     const first_name = await getValidatedInput("first_name", "Enter your First name: ");
     const email = await getValidatedInput("email", "Enter your Email: ");
     const password = await getValidatedInput("password", "Enter your Password: ");
-    const companyId = await getValidatedInput("companyId", "Enter your Password: ");
 
     const superAdmin = new Users({
-      companyId,
       email,
       last_name,
       first_name,
       password,
       type: "super",
-      company : new Types.ObjectId("67bf7cf4c7ef2a1a638f6144"),
+      companyId : new Types.ObjectId("67bf7cf4c7ef2a1a638f6144"),
       isActive: true,
     });
     
