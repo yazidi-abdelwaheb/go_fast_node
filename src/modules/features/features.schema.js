@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { FeaturesTypeEnum, FeaturesStatusEnum } from "../../shared/shared.exports.js";
 
-const featureShema = new Schema(
+const featureschema = new Schema(
   {
     code: {
       type: String,
@@ -39,10 +39,9 @@ const featureShema = new Schema(
     link: {
       type: String,
       minlength: 1,
-      maxlength: 100,
+      maxlength: 200,
       trim : true,
       lowercase : true,
-      match: /^[a-z0-9/-]+$/,
     },
     order: {
       type: Number,
@@ -62,10 +61,10 @@ const featureShema = new Schema(
   { timestamps: true }
 );
 
-featureShema.virtual("search").get( function () {
+featureschema.virtual("search").get( function () {
   return `${this.code} ${this.title}`;
 });
 
-const Features = model("Features", featureShema);
+const Features = model("Features", featureschema);
 
 export default Features;

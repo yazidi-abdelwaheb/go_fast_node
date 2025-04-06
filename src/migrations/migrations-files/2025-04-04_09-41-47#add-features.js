@@ -1,6 +1,6 @@
 //import { askQuestion } from "../utils.js";
 import { setupMongoServer } from "../../config/db.config.js";
-import Features from "../../modules/features/features.shema.js";
+import Features from "../../modules/features/features.schema.js";
 import { loadData } from "../utils.js";
 
 const addFeaturesMigration = async () => {

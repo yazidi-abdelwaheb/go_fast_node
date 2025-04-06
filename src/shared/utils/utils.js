@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import Users from "../../modules/users/users.shema.js";
+import Users from "../../modules/users/users.schema.js";
 import crypto, { randomUUID } from "crypto";
-import Orders from "../../modules/orders/orders.shema.js";
+import Orders from "../../modules/orders/orders.schema.js";
 import multer from "multer";
 
 /*********************** Error handler ***********************/

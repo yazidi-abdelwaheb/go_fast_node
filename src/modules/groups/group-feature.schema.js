@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const groupFeatureShema = new Schema(
+const groupFeatureschema = new Schema(
   {
     companyId: {
       type: Schema.Types.ObjectId,
@@ -50,6 +50,6 @@ const groupFeatureShema = new Schema(
   { timestamps: true }
 );
 
-const GroupFeature = model("GroupFeature", groupFeatureShema);
+const GroupFeature = model("GroupFeature", groupFeatureschema);
 
 export default GroupFeature;

@@ -1,7 +1,7 @@
 //import { askQuestion } from "../utils.js";
 import mongoose from "mongoose";
 import { setupMongoServer } from "../../config/db.config.js";
-import Company from "../../modules/companys/companys.shema.js";
+import Company from "../../modules/companys/companys.schema.js";
 
 const initCompanyMigration = async () => {
   try {

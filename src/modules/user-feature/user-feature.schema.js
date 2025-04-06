@@ -1,6 +1,6 @@
 import { Schema , model } from "mongoose";
 
-const UserFeatureShema = new Schema({
+const UserFeatureschema = new Schema({
   companyId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -53,6 +53,6 @@ const UserFeatureShema = new Schema({
   },
 }, { timestamps: true });
 
-const UserFeature =  model('UserFeature', UserFeatureShema);
+const UserFeature =  model('UserFeature', UserFeatureschema);
 
 export default UserFeature;

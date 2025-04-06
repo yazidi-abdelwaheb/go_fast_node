@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import Features from "./features.shema.js";
+import Features from "./features.schema.js";
 import {
   FeaturesStatusEnum,
   FeaturesTypeEnum,
@@ -99,7 +99,7 @@ export const updateOneValidation = [
     .notEmpty()
     .withMessage("Status is required")
     .custom(async (value) => {
-      if (!Object.values(FeaturesStatusEnum).includes(value.toLowerCase())) {
+      if (!Object.values(featureStatus).includes(value)) {
         throw new Error("Status invalid");
       }
       return true;

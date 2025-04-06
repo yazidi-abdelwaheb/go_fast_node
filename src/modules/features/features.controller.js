@@ -4,9 +4,9 @@ import {
   getPaginatedData,
   featureStatus,
 } from "../../shared/shared.exports.js";
-import GroupFeature from "../groups/group-feature.shema.js";
-import UserFeature from "../user-feature/user-feature.shema.js";
-import Feature from "./features.shema.js";
+import GroupFeature from "../groups/group-feature.schema.js";
+import UserFeature from "../user-feature/user-feature.schema.js";
+import Feature from "./features.schema.js";
 
 export default class FeatureController {
   static async getList(req, res) {

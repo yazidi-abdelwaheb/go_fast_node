@@ -1,11 +1,11 @@
 import { body, param } from "express-validator";
-import Groups from "./groups.shema.js";
+import Groups from "./groups.schema.js";
 import {
   customValidatorId,
   customValidatorUniqueValueForInsert,
   customValidatorUniqueValueForUpdate,
 } from "../../shared/shared.exports.js";
-import Features from "../features/features.shema.js";
+import Features from "../features/features.schema.js";
 
 /*const groupFeaturesValidation = [
   body("groupFeatures.featureId")

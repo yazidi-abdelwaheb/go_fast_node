@@ -1,5 +1,5 @@
 import { askQuestion } from "../utils.js";
-import Users from "../../modules/users/users.shema.js";
+import Users from "../../modules/users/users.schema.js";
 import { setupMongoServer } from "../../config/db.config.js";
 import { Types } from "mongoose";
 

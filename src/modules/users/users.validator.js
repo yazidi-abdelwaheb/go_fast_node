@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
-import Users from "./users.shema.js";
-import Company from "../companys/companys.shema.js";
+import Users from "./users.schema.js";
+import Company from "../companys/companys.schema.js";
 import {
   customValidatorId,
   customValidatorUniqueValueForInsert,
@@ -9,7 +9,7 @@ import {
   UserStatusEnum,
   UserTypeEnum,
 } from "../../shared/shared.exports.js";
-import Groups from "../groups/groups.shema.js";
+import Groups from "../groups/groups.schema.js";
 
 const userValidation = [
   /*body("user.companyId")

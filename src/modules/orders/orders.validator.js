@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
-import Orders from "./orders.shema.js";
-import Products from "../products/products.shema.js";
+import Orders from "./orders.schema.js";
+import Products from "../products/products.schema.js";
 import { customValidatorId } from "../../shared/shared.exports.js";
 
 export const createOneValidation = [

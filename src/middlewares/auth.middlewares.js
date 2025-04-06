@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import Users from "../modules/users/users.shema.js";
+import Users from "../modules/users/users.schema.js";
 import {
   actions,
   CustomError,
@@ -8,9 +8,9 @@ import {
   featureStatus,
   UserTypeEnum,
 } from "../shared/shared.exports.js";
-import Feature from "../modules/features/features.shema.js";
-import UserFeature from "../modules/user-feature/user-feature.shema.js";
-import GroupFeature from "../modules/groups/group-feature.shema.js";
+import Feature from "../modules/features/features.schema.js";
+import UserFeature from "../modules/user-feature/user-feature.schema.js";
+import GroupFeature from "../modules/groups/group-feature.schema.js";
 
 /**********************  TOKEN VALIDATION MIDLWARES  **********************/
 

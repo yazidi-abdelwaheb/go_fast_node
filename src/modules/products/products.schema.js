@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-const productShema = new Schema(
+const productschema = new Schema(
   {
     /*companyId: {
       type: Schema.Types.ObjectId,
@@ -34,15 +34,15 @@ const productShema = new Schema(
   { timestamps: true }
 );
 
-productShema.virtual("search").get(function () {
+productschema.virtual("search").get(function () {
   return `${this.label} ${this.price.toString()}`;
 });
 
-productShema.pre("save", async function (next) {
+productschema.pre("save", async function (next) {
   this.price = parseFloat(this.price).toFixed(3);
   next();
 });
-productShema.pre(["updateOne", "findOneAndUpdate"], async function (next) {
+productschema.pre(["updateOne", "findOneAndUpdate"], async function (next) {
   const update = this.getUpdate();
 
   if (update.price) {
@@ -52,6 +52,6 @@ productShema.pre(["updateOne", "findOneAndUpdate"], async function (next) {
   next();
 });
 
-const Products = model("Products", productShema);
+const Products = model("Products", productschema);
 
 export default Products;

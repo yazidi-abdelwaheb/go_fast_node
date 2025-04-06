@@ -3,9 +3,9 @@ import {
   CustomError,
   getPaginatedData,
 } from "../../shared/shared.exports.js";
-import Group from "./groups.shema.js";
+import Group from "./groups.schema.js";
 import { Types } from "mongoose";
-import GroupFeature from "./group-feature.shema.js";
+import GroupFeature from "./group-feature.schema.js";
 
 export default class GroupController {
   static async getList(req, res) {
@@ -28,7 +28,7 @@ export default class GroupController {
       );
 
       res.status(200).json({
-        total : totalElement,
+        total: totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,
@@ -70,8 +70,7 @@ export default class GroupController {
      */
     try {
       const { group, groupFeature } = req.body;
-      console.log(groupFeature);
-      
+
       /// Create a new group
       const newOne = await new Group({
         code: group.code,
