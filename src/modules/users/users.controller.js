@@ -21,7 +21,7 @@ export default class UsersController {
         limit,
         search,
         ["first_name", "last_name", "email"],
-        {},
+        { type: { $ne: "super" } },
         {
           from: "groups",
           localField: "groupId",
