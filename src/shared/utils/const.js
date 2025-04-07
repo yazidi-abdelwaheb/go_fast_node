@@ -17,7 +17,7 @@ const CODE_EXPIRE_IN_LOGIN_SUPER = ms("5m");
  */
 const TOKEN_EXPIRE_IN_USERS = ms("1w");
 /**
- * 2 hours
+ * 10 hours
  */
 const TOKEN_EXPIRE_IN_SUPER = ms("10h");
 

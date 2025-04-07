@@ -54,7 +54,7 @@ export default class AuthController {
         }
         if (user.groupId) {
           const defaultFeature = await GroupFeature.findOne({
-            groupsId: user.groupId,
+            groupId: user.groupId,
             defaultFeature: true,
           }).populate("featureId");
           if (defaultFeature) {

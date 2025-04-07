@@ -8,14 +8,13 @@ const initCompanyMigration = async () => {
     // Your migration logic here
     await setupMongoServer();
 
-    const existingCompany = await Company.findOne({ code: "go_fast" });
-    if (existingCompany) {
-      console.log("Company Go Fast already exists.");
-      return;
-    }
+    //deleted all old company from data base
+    await Company.deleteMany();
+
+    console.log("Creating new company...");
 
     const data = {
-      _id : new mongoose.Types.ObjectId("67bf7cf4c7ef2a1a638f6144"),
+      _id: new mongoose.Types.ObjectId("67bf7cf4c7ef2a1a638f6144"),
       label: "Go Fast",
       code: "go_fast",
     };
@@ -25,7 +24,9 @@ const initCompanyMigration = async () => {
   } catch (e) {
     console.error("An error occurred while running the migration: ", e);
   } finally {
-    process.exit(0);
+    if (process.env.NODE_ENV !== process.env.PROD_MODE) {
+      process.exit(0);
+    }
   }
 };
 

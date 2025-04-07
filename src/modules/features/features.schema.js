@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { FeaturesTypeEnum, FeaturesStatusEnum } from "../../shared/shared.exports.js";
+import { FeaturesTypeEnum, featureStatus } from "../../shared/shared.exports.js";
 
 const featureschema = new Schema(
   {
@@ -50,7 +50,7 @@ const featureschema = new Schema(
     },
     status: {
       type: String,
-      enum: Object.values(FeaturesStatusEnum),
+      enum: Object.values(featureStatus),
       required: true,
     },
     featuresIdParent: {

@@ -55,7 +55,9 @@ const ${fnName} = async () => {
   } catch (e) {
     console.error("An error occurred while running the migration: ", e);
   } finally {
-    process.exit(0);
+    if (process.env.NODE_ENV !== process.env.PROD_MODE) {
+      process.exit(0);
+    }
   }
 };
 

@@ -1,7 +1,10 @@
 import app from "./src/app.js";
 import { setupMongoServer } from "./src/config/db.config.js";
 import migration_system from "./src/migrations/index.js";
-import { migration_system_commands_names } from "./src/migrations/utils.js";
+import {
+  migration_system_commands_names,
+  init_migration,
+} from "./src/migrations/utils.js";
 
 async function main() {
   if (migration_system_commands_names.indexOf(process.argv[2]) !== -1) {
@@ -21,7 +24,11 @@ async function main() {
 
     // Conecte to database
     await setupMongoServer();
-    
+
+    // Initialize the migration system if mode is prod
+    if (process.env.NODE_ENV === process.env.PROD_MODE) {
+      await init_migration();
+    }
 
     // Run server.
     app.listen(PORT, () => {

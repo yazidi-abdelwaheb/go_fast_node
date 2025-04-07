@@ -10,6 +10,7 @@ import productsRoutes from "./modules/products/products.routers.js";
 import ordersRouters from "./modules/orders/orders.routers.js";
 import menuRouters from "./modules/menu/menu.routers.js";
 import textsRouters from "./modules/texts/text.routers.js";
+import userFeatureRouters from "./modules/user-feature/user-features.routers.js";
 import { isAuth } from "./middlewares/auth.middlewares.js";
 const app = express();
 
@@ -38,12 +39,12 @@ app.use("/api/products", isAuth, productsRoutes);
 app.use("/api/orders", isAuth, ordersRouters);
 app.use("/api/menu", isAuth, menuRouters);
 app.use("/api/texts", isAuth, textsRouters);
+app.use("/api/user-feature", isAuth, userFeatureRouters);
 
 
 
 // Define endpoint for photos.
 app.use("/media/photo/user", isAuth)
 app.use("/media/photo/product", isAuth)
-
 
 export default app;

@@ -19,6 +19,9 @@ const addTextsMigration = async () => {
     // connect to database
     await setupMongoServer();
 
+    // deleted all old texts
+    await Texts.deleteMany();
+
     for await (const text of texts) {
       const textAdded = new Texts(text);
       await textAdded.save();
@@ -27,7 +30,9 @@ const addTextsMigration = async () => {
   } catch (e) {
     console.error("An error occurred while running the migration: ", e);
   } finally {
-    process.exit(0);
+    if (process.env.NODE_ENV !== process.env.PROD_MODE) {
+      process.exit(0);
+    }
   }
 };
 
