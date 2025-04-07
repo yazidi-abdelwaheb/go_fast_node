@@ -39,7 +39,7 @@
         }
       }
     },
-    "/api/auth/verify-login-super": {
+    "/api/auth/verif-account": {
       "post": {
         "summary": "Verify login super",
         "description": "",
@@ -146,7 +146,7 @@
         }
       }
     },
-    "/api/auth/forget-password": {
+    "/api/auth/forgot-password": {
       "post": {
         "summary": "send email for forget password",
         "description": "",
@@ -171,7 +171,7 @@
         }
       }
     },
-    "/api/auth/validation-code-forget-password": {
+    "/api/auth/validation-code-forgot-password": {
       "post": {
         "summary": "Validation code for forgot password",
         "description": "",
@@ -576,6 +576,20 @@
           },
           {
             "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filterType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filterStatus",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1006,7 +1020,7 @@
         }
       }
     },
-    "/api/groups/{id}/group-features": {
+    "/api/groups/{id}/group-feature": {
       "get": {
         "description": "",
         "parameters": [

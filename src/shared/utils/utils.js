@@ -54,7 +54,6 @@ export const generation_JWT_Token = (user, expiresIn = Infinity) => {
       companyId: user.companyId,
       defaultLink: user.defaultLink,
       groupId: user.groupId,
-      groupsId: user.groupsId,
     },
     process.env.JWT_SECRET,
     { expiresIn: expiresIn }

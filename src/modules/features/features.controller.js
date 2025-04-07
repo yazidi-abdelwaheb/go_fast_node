@@ -17,6 +17,16 @@ export default class FeatureController {
       const page = parseInt(req.query.page, 10) || 1;
       const limit = parseInt(req.query.limit, 10) || 10;
       const search = req.query.search || "";
+      const filterType = req.query.filterType || "";
+      const filterStatus = req.query.filterStatus || "";
+      const filter = {};
+      if (filterType) {
+        filter.type = { $in: filterType.split(",") };
+      }
+      if (filterStatus) {
+        filter.status = { $in: filterStatus.split(",") };
+      }
+      
       //const features = await Feature.find().populate("parentFeature")
 
       const { data, totalElement, totalPages } = await getPaginatedData(
@@ -25,7 +35,7 @@ export default class FeatureController {
         limit,
         search,
         ["code", "title", "subtitle"],
-        {},
+        filter,
         {
           from: "features",
           localField: "featuresIdParent",
@@ -34,7 +44,7 @@ export default class FeatureController {
         }
       );
       return res.status(200).json({
-        total : totalElement,
+        total: totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,

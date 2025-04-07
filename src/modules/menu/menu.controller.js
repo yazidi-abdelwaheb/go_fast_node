@@ -35,7 +35,7 @@ export default class MenuController {
         }));
       } else {
         const filterUser = {
-          userId: new Types.ObjectId(req.user.id),
+          userId: new Types.ObjectId(req.user._id),
         };
         const usersFeatures = await UserFeature.aggregate([
           { $match: filterUser },
@@ -81,37 +81,37 @@ export default class MenuController {
         }
 
         const usersFeaturesData = usersFeatures.map((feature) => ({
-          _id: feature.featuresId._id,
-          id: feature.featuresId._id,
-          subtitle: feature.featuresId.subtitle,
-          link: feature.featuresId.link,
-          icon: feature.featuresId.icon,
-          featuresIdParent: feature.featuresId.featuresIdParent,
-          code: feature.featuresId.code,
-          title: feature.featuresId.title,
+          _id: feature.featureId._id,
+          id: feature.featureId._id,
+          subtitle: feature.featureId.subtitle,
+          link: feature.featureId.link,
+          icon: feature.featureId.icon,
+          featuresIdParent: feature.featureId.featuresIdParent,
+          code: feature.featureId.code,
+          title: feature.featureId.title,
           create: feature.create || false,
           delete: feature.delete || false,
           update: feature.update || false,
           read: feature.read || false,
-          type: feature.featuresId.type,
+          type: feature.featureId.type,
           status: feature.status,
           children: [],
         }));
 
         const groupsFeaturesData = groupsFeatures.map((feature) => ({
-          _id: feature.featuresId._id,
-          id: feature.featuresId._id,
-          subtitle: feature.featuresId.subtitle,
-          link: feature.featuresId.link,
-          icon: feature.featuresId.icon,
-          featuresIdParent: feature.featuresId.featuresIdParent,
-          code: feature.featuresId.code,
-          title: feature.featuresId.title,
+          _id: feature.featureId._id,
+          id: feature.featureId._id,
+          subtitle: feature.featureId.subtitle,
+          link: feature.featureId.link,
+          icon: feature.featureId.icon,
+          featuresIdParent: feature.featureId.featuresIdParent,
+          code: feature.featureId.code,
+          title: feature.featureId.title,
           create: feature.create || false,
           delete: feature.delete || false,
           update: feature.update || false,
           read: feature.read || false,
-          type: feature.featuresId.type,
+          type: feature.featureId.type,
           status: feature.status,
           children: [],
         }));

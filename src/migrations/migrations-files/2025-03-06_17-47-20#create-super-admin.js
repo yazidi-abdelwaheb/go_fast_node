@@ -49,9 +49,13 @@ const createSuperAdminMigration = async() => {
     const existingAdmin = await Users.findOne({ type: "super" });
     
     if (existingAdmin) {
-      console.log("Super admin already exists.");
+      //console.log("Super admin already exists. Do you like create author super admin ? [y/n] : ");
+      let value = await askQuestion("Super admin already exists. Do you like create other super admin ? [y/n] :");
+      if(value === "n")
       return;
     }
+
+    console.log("Creating new super admin...");
 
     
     const last_name = await getValidatedInput("last_name", "Enter your Last name: ");
@@ -78,7 +82,9 @@ const createSuperAdminMigration = async() => {
   } catch (e) {
     console.error("An error occurred while running the migration: ", e);
   }finally {
-    process.exit(0);
+    if (process.env.NODE_ENV !== process.env.PROD_MODE) {
+      process.exit(0);
+    }
   }
 }
 

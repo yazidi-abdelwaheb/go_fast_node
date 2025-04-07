@@ -45,11 +45,15 @@ const UserFeatureschema = new Schema({
     default: false,
     required: false,
   },
-  usersCreation: {
+  userCreation: {
     type: Schema.Types.ObjectId,
+    ref : 'users',
+    required : true
   },
-  usersLastUpdate: {
+  userLastUpdate: {
     type: Schema.Types.ObjectId,
+    ref : 'users',
+    required : true
   },
 }, { timestamps: true });
 

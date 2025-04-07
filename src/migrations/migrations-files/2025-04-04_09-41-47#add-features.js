@@ -18,6 +18,8 @@ const addFeaturesMigration = async () => {
     // connect to database
     await setupMongoServer();
 
+    console.log("Creating new features...");
+
     // fetch all oldfeatures
     const oldFeatures = await Features.find();
 
@@ -59,7 +61,9 @@ const addFeaturesMigration = async () => {
   } catch (e) {
     console.error("An error occurred while running the migration: ", e);
   } finally {
-    process.exit(0);
+    if (process.env.NODE_ENV !== process.env.PROD_MODE) {
+      process.exit(0);
+    }
   }
 };
 

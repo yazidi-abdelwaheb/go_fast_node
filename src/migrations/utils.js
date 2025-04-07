@@ -2,6 +2,9 @@ import path from "path";
 import readline from "readline";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import Company from "../modules/companys/companys.schema.js";
+import Users from "../modules/users/users.schema.js";
+import Features from "../modules/features/features.schema.js";
 
 /**
  * define all commands and aliases for system
@@ -69,42 +72,63 @@ export const getListDataName = () => {
   return files.map((e) => {
     return {
       name: e.split("#")[1].replace(".json", ""),
-      path: e
+      path: e,
     };
   });
 };
 
-
 /**
- * load data from file in ./data directory  
- * @param {string} dataname name of the file 
- * @returns {Promise<array>}  data from the file 
+ * load data from file in ./data directory
+ * @param {string} dataname name of the file
+ * @returns {Promise<array>}  data from the file
  */
 export const loadData = async (dataname) => {
   try {
-   
-    const files = getListDataName()
+    const files = getListDataName();
     const dataPath = files.find((file) => file.name === dataname)?.path;
     if (!dataPath) {
-     throw new Error(`[loadData] Data file "${dataname}" not found.`);
+      throw new Error(`[loadData] Data file "${dataname}" not found.`);
     }
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
-    const filePath = path.join(__dirname, 'data', dataPath);
+    const filePath = path.join(__dirname, "data", dataPath);
 
-    const data = fs.readFileSync(filePath, 'utf8');
+    const data = fs.readFileSync(filePath, "utf8");
 
     try {
       const jsonData = JSON.parse(data);
       return jsonData;
     } catch (parseErr) {
-      throw new Error(`Le contenu de "${dataname}.json" n'est pas un JSON valide.`);
+      throw new Error(
+        `Le contenu de "${dataname}.json" n'est pas un JSON valide.`
+      );
     }
-
   } catch (err) {
     console.error(`[loadData] Erreur: ${err.message}`);
     return null;
+  }
+};
+
+/**
+ * function to init all principale migration before run a server en mode prod
+ * @returns {Promise<void>}
+ */
+export const init_migration = async () => {
+  try {
+    // deleted migration create-super-admin from a principale migration en mode prod
+    const migrations_data = getListMigrationName().filter(e=>e.name!=="create-super-admin");
+    for (const migration of migrations_data) {
+      const filePath = `./migrations-files/${migration.filePath.replace(
+        "#",
+        "%23"
+      )}`;
+      console.log();
+      await import(filePath);
+    }
+  } catch (error) {
+    console.log(error.message);
+    throw error;
   }
 };

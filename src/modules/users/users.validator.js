@@ -99,7 +99,7 @@ export const updateOneValidation = [
       );
     }),
   body("user.lang").custom(async (value) => {
-    if (value && !Object.values(UserLanguagesEnum).includes(value.toLowerCase())) {
+    if (value && !Object.values(UserLanguagesEnum).includes(value)) {
       throw new Error("Invalid language.");
     }
     return true;
@@ -141,7 +141,7 @@ export const updateMyAccountValidation = [
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long"),
   body("user.lang").custom(async (value) => {
-    if (!Object.values(UserLanguagesEnum).includes(value.toLowerCase())) {
+    if (!Object.values(UserLanguagesEnum).includes(value)) {
       throw new Error("Invalid language.");
     }
     return true;
@@ -152,7 +152,7 @@ export const deleteOneValidation = [...readOneValidation];
 
 export const updateMyLanguageValidation = [
   body("lang").custom(async (value) => {
-    if (!Object.values(UserLanguagesEnum).includes(value.toLowerCase())) {
+    if (!Object.values(UserLanguagesEnum).includes(value)) {
       throw new Error("Invalid language.");
     }
     return true;
@@ -161,7 +161,7 @@ export const updateMyLanguageValidation = [
 
 export const updateMyStatusValidation = [
   body("status").custom(async (value) => {
-    if (!Object.values(UserStatusEnum).includes(value.toLowerCase())) {
+    if (!Object.values(UserStatusEnum).includes(value)) {
       throw new Error("Invalid status.");
     }
     return true;

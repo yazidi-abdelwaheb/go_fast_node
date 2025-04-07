@@ -14,6 +14,12 @@ export default class UsersController {
       const page = parseInt(req.query.page, 10) || 1;
       const limit = parseInt(req.query.limit, 10) || 10;
       const search = req.query.search || "";
+      const filterStatus = req.query.filterStatus || "";
+      
+      const filter = { type: { $ne: "super" } };
+      if (filterStatus) {
+        filter.status = { $in: filterStatus.split(",") };
+      }
 
       const { data, totalElement, totalPages } = await getPaginatedData(
         model,
@@ -21,7 +27,7 @@ export default class UsersController {
         limit,
         search,
         ["first_name", "last_name", "email"],
-        { type: { $ne: "super" } },
+        filter,
         {
           from: "groups",
           localField: "groupId",
@@ -31,7 +37,7 @@ export default class UsersController {
       );
 
       res.status(200).json({
-        total : totalElement,
+        total: totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,

@@ -61,6 +61,7 @@ async function migration_system() {
         console.log("run migration : " + args.run);
         console.log("");
         await runMigration(args.run);
+        
       } else {
         console.log("");
         console.log(
