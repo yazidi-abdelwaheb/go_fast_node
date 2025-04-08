@@ -2,7 +2,7 @@
  * end point exports all functions and classes and consts in this shared folder
  */
 
-export  {
+export {
   featureStatus,
   userState,
   UserTypeEnum,
@@ -22,21 +22,21 @@ export {
   generation_JWT_Token,
   generateUniqueUsername,
   generateUniqueCodeForOrders,
-  upload
+  upload,
 } from "./utils/utils.js";
 
 export {
   customValidatorUniqueValueForInsert,
   customValidatorUniqueValueForUpdate,
   customValidatorId,
-  checkValidationErrors
+  checkValidationErrors,
 } from "./utils/validators.utils.js";
 
-export  {
+export {
   sendMail,
   templateMails,
   subjects,
-  contentMails
+  contentMails,
 } from "./utils/mail.utils.js";
 
 export {
@@ -46,7 +46,7 @@ export {
   TOKEN_EXPIRE_IN_USERS,
   TOKEN_EXPIRE_IN_SUPER,
   ATTEMPTS_OF_CODE_VALIDATION,
-  ATTEMPTS_OF_CODE_VALIDATION_SUPER
+  ATTEMPTS_OF_CODE_VALIDATION_SUPER,
 } from "./utils/const.js";
 
-
+export { uploadImage, createDirectoriesphotos } from "./utils/multer.utils.js";

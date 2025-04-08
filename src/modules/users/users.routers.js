@@ -57,7 +57,7 @@ routers.patch(
   "/language",
   updateMyLanguageValidation,
   checkValidationErrors,
-  controller.updateMyAccount
+  controller.updateMyLanguage
 );
 
 routers.patch(

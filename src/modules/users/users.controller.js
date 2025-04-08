@@ -1,5 +1,5 @@
 import Users from "./users.schema.js";
-import { errorCatch, getPaginatedData } from "../../shared/shared.exports.js";
+import { CustomError, errorCatch, getPaginatedData, uploadImage } from "../../shared/shared.exports.js";
 import crypto from "crypto";
 import GroupFeature from "../groups/group-feature.schema.js";
 import { Types } from "mongoose";
@@ -265,4 +265,41 @@ export default class UsersController {
       errorCatch(error, req, res);
     }
   }
+
+  static async updateMyAvatar(req, res) {
+    /**
+     * #swagger.summary = Update avatar of the connected user. Please use Postman for testing this endpoint.
+     */
+    try {
+      const userId = req.user._id;
+  
+      // Middleware to upload the image
+      const upload = uploadImage("avatar");
+      upload(req, res, async (err) => {
+        if (err instanceof multer.MulterError) {
+          throw new CustomError('Error uploading avatar. Please try again later.' , 500);
+        } else if (err) {
+          throw new Error(err.message);
+        }
+  
+        // Check if the file has been uploaded successfully
+        if (!req.file) {
+          throw new Error('Avatar was not uploaded. Please try again later.');
+        }
+  
+        // Update the user's avatar with the URL of the uploaded image
+        const avatarUrl = `/avatars/${req.file.filename}`;
+  
+        // Update the user with the new avatar URL
+        await Users.updateOne({ _id: userId }, { avatar: avatarUrl });
+  
+        res.status(200).json({
+          message: "Avatar updated successfully.",
+        });
+      });
+    } catch (error) {
+      errorCatch(error, req, res);
+    }
+  }
+  
 }

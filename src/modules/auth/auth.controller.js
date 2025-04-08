@@ -19,13 +19,14 @@ import {
 import Users from "../users/users.schema.js";
 import GroupFeature from "../groups/group-feature.schema.js";
 import sendMail, { templateMailVerifyMail } from "../../shared/mail.utils.js";
+import jwt from "jsonwebtoken";
 
 export default class AuthController {
   /*static async login(req, res) {
     /**
      * #swagger.summary = "Login"
      */
-    /*try {
+  /*try {
       const { email, password } = req.body;
       const user = await Users.findOne({ email });
       if (!user) throw new CustomError("Incorrect email or password!", 400);
@@ -74,45 +75,45 @@ export default class AuthController {
     }
   }*/
 
-    static async login(req, res) {
-      try {
-        const { email, password } = req.body;
-        const user = await Users.findOne({ email });
-        if (!user) throw new CustomError("Incorrect email or password!", 400);
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) throw new CustomError("Incorrect email or password!", 400);
-  
-        if (user.type === "super" || user.type === "user") {
-          let key;
-          if (user.email === "youssefwerfellicpm@gmail.com") {
-            key = "000000";
-          } else {
-            key = crypto.randomInt(100000, 999999).toString();
-          }
-          await Users.findByIdAndUpdate(
-            user._id,
-            {
-              $set: {
-                code: {
-                  key: key,
-                  expireIn: Date.now() + 60 * 60 * 1000, // 1 hour
-                  attempts: 3,
-                },
+  static async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      const user = await Users.findOne({ email });
+      if (!user) throw new CustomError("Incorrect email or password!", 400);
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) throw new CustomError("Incorrect email or password!", 400);
+
+      if (user.type === "super" || user.type === "user") {
+        let key;
+        if (user.email === "youssefwerfellicpm@gmail.com") {
+          key = "000000";
+        } else {
+          key = crypto.randomInt(100000, 999999).toString();
+        }
+        await Users.findByIdAndUpdate(
+          user._id,
+          {
+            $set: {
+              code: {
+                key: key,
+                expireIn: Date.now() + 60 * 60 * 1000, // 1 hour
+                attempts: 3,
               },
             },
-            { new: true }
-          );
-  
-          const subject = "Account Verification - GO FAST";
-          await sendMail(user.email, subject, templateMailVerifyMail(key));
-  
-          return res.status(200).json({ message: "Please check your email." });
-        }
-        res.status(400).json({ message: "User not admin." });
-      } catch (error) {
-        errorCatch(error,req, res);
+          },
+          { new: true }
+        );
+
+        const subject = "Account Verification - GO FAST";
+        await sendMail(user.email, subject, templateMailVerifyMail(key));
+
+        return res.status(200).json({ message: "Please check your email." });
       }
+      res.status(400).json({ message: "User not admin." });
+    } catch (error) {
+      errorCatch(error, req, res);
     }
+  }
 
   static async verifyAccountAdmin(req, res) {
     try {
@@ -145,15 +146,24 @@ export default class AuthController {
         }
       );
       if (user.new === true) {
-        return res.status(455).json({ message: "Please change password " });
+        const tokenEmail = jwt.sign(
+          {
+            email: user.email,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: 30 * 60 * 1000 }
+        );
+        return res
+          .status(455)
+          .json({ message: "Please change password ", token: tokenEmail });
       } else {
-        const token = generation_JWT_Token(user,(15*60*1000));
+        const token = generation_JWT_Token(user, 15 * 60 * 1000);
         res
           .status(200)
           .json({ message: "User logged in successfully.", token });
       }
     } catch (error) {
-      errorCatch(error,req, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -202,8 +212,7 @@ export default class AuthController {
           "Account create successfully . Please check your email for active your account.",
       });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -240,8 +249,7 @@ export default class AuthController {
         .status(200)
         .json({ message: "Account activated successfully.", token });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -270,8 +278,7 @@ export default class AuthController {
         .status(200)
         .json({ message: "Verification email sent successfully." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -298,8 +305,7 @@ export default class AuthController {
         .status(200)
         .json({ message: "Verification email sent successfully." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -315,8 +321,7 @@ export default class AuthController {
 
       res.status(200).json({ message: "Code valid." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -325,25 +330,40 @@ export default class AuthController {
      * #swagger.summary = "Reset password"
      */
     try {
-      const { email, password, code } = req.body;
-      const user = await Users.findOne({ email });
+      const { password, token } = req.body;
+      let decoded;
+      try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (error) {
+        return res.status(401).json({ message: "Invalid or expired token." });
+      }
 
-      await verifyCode(user, code);
+      const email = decoded.email;
+      if (!email) {
+        return res
+          .status(400)
+          .json({ message: "Token does not contain email." });
+      }
+
+      // Find user by email
+      const user = await Users.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ message: "User not found." });
+      }
 
       await Users.updateOne(
         { _id: user._id },
-        { $unset: { code: null, password: password ,new :null}} ,
+        { $unset: { code: null, password: password, new: null } }
       );
       res.status(200).json({ message: "Password updated successfully ." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
-  static async updatePassword(req, res) {
+  static async checkToken(req, res) {
     /**
-     * #swagger.summary = update password before 1st login
+     * #swagger.summary = function to valided token
      * * #swagger.requestBody = {
             required: true,
             content: {
@@ -357,26 +377,16 @@ export default class AuthController {
         }
      */
     try {
-      const { password, email } = req.body;
-      const user = await Users.findOneAndUpdate(
-        { email,new: true  },
-        { $unset: { code: null, password: password } },
-      );
-
-      if (user.groupId) {
-        const defaultFeature = await GroupFeature.findOne({
-          groupsId: user.groupId,
-          defaultFeature: true,
-        }).populate("featureId");
-        if (defaultFeature) {
-          user.defaultLink = defaultFeature.featureId.link;
-        }
+      const {token} = req.body
+      let decoded;
+      try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (error) {
+        return res.status(401).json({ message: "Invalid or expired token." });
       }
-      const token = generation_JWT_Token(user, 15*60*1000);
-      res.status(200).json({ message: "User logged in successfully.", token });
+      return res.status(200).json({ message: "Token valid." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 }

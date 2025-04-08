@@ -59,14 +59,14 @@ routers.post(
 
 routers.patch(
   "/reset-password",
-  resetPasswordValidators,
-  checkValidationErrors,
+  /*resetPasswordValidators,
+  checkValidationErrors,*/
   Controller.resetPassword
 );
 
-routers.patch(
-  "/update-password",
-  Controller.updatePassword
+routers.post(
+  "/check-token",
+  Controller.checkToken
 );
 
 export default routers;
