@@ -64,6 +64,13 @@ routers.patch(
   Controller.resetPassword
 );
 
+routers.patch(
+  "/update-password",
+  /*resetPasswordValidators,
+  checkValidationErrors,*/
+  Controller.updatePassword
+);
+
 routers.post(
   "/check-token",
   Controller.checkToken
