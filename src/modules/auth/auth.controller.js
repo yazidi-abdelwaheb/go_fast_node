@@ -340,7 +340,8 @@ export default class AuthController {
       const { password, email } = req.body;
       const user = await Users.findOneAndUpdate(
         { email,new: true  },
-        { $unset: { code: null, password: password } },
+        { $unset: { code: null,new:null}},
+        { $set:{password: password} },
       );
 
       if (user.groupId) {
