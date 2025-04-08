@@ -53,6 +53,10 @@ const userSchema = new Schema(
       required: [true, "Password is required"],
       minlength: [8, "Password must be at least 8 characters long"],
     },
+    new: {
+      type:Boolean,
+      default:true
+    },
     code: {
       key: {
         type: String,

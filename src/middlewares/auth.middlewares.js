@@ -20,49 +20,27 @@ import GroupFeature from "../modules/groups/group-feature.schema.js";
  * @param {Response} res This Fetch API interface represents the response to a request
  * @param {*} next next action to execute
  */
+
 export const isAuth = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      throw new CustomError("Bad token", 401);
-    }
+      const token = req.headers.authorization?.split(" ")[1];
+      if (!token) throw new CustomError("Unauthorized: No token provided", 401);
 
-    const tokenSplit = authHeader.split(" ");
-    if (tokenSplit.length !== 2 || tokenSplit[0] !== "Bearer") {
-      throw new CustomError("Bad token format", 401);
-    }
+      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`);
+      const user = await Users.findById(decoded._id);
+      
+      if (!user) throw new CustomError("Unauthorized: User not found", 401);
 
-    const token = tokenSplit[1];
+      if(!user.isActive) throw new CustomError("Unauthorized: Your account is inactive",401)
 
-    let user;
-    try {
-      user = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      throw new CustomError("401 Unauthorized", 401);
-    }
-
-    const userData = await Users.findOne(
-      { _id: user._id },
-      { isActive: 1, lang: 1 }
-    );
-
-    if (!userData || !userData.isActive) {
-      throw new CustomError(
-        "Your account is inactive. Please activate your account and try again later or contact your administrator.",
-        403
-      );
-    }
-
-    req.user = user;
-    req.user.lang = userData.lang;
-    //console.log(req.user);
-
-    next();
+      req.user = user;
+      req.token = user;
+      next();
   } catch (error) {
-    
-    errorCatch(error, req , res);
+      res.status(401).json({ message: "Unauthorized", error: error.message });
   }
 };
+
 
 export const isAuthorized = (features_) => async (req, res, next) => {
   try {

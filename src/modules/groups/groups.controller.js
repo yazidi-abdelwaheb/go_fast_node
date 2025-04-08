@@ -228,7 +228,7 @@ export default class GroupController {
       
       errorCatch(e, req, res);
     }
-  }
+}
 
   static async getAll(req, res) {
     try {

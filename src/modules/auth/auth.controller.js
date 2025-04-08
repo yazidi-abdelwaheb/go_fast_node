@@ -6,7 +6,7 @@ import {
   errorCatch,
   contentMails,
   subjects,
-  sendMail,
+  /*sendmail,*/
   templateMails,
   CODE_EXPIRE_IN_FORGET_PASSWORD,
   CODE_EXPIRE_IN_ACTIVATE_ACCOUNT,
@@ -18,13 +18,14 @@ import {
 } from "../../shared/shared.exports.js";
 import Users from "../users/users.schema.js";
 import GroupFeature from "../groups/group-feature.schema.js";
+import sendMail, { templateMailVerifyMail } from "../../shared/mail.utils.js";
 
 export default class AuthController {
-  static async login(req, res) {
+  /*static async login(req, res) {
     /**
      * #swagger.summary = "Login"
      */
-    try {
+    /*try {
       const { email, password } = req.body;
       const user = await Users.findOne({ email });
       if (!user) throw new CustomError("Incorrect email or password!", 400);
@@ -71,33 +72,88 @@ export default class AuthController {
       
       errorCatch(error, req , res);
     }
-  }
+  }*/
 
-  static async verifyLoginSuper(req, res) {
-    /**
-     * #swagger.summary = "Verify login super"
-     */
+    static async login(req, res) {
+      try {
+        const { email, password } = req.body;
+        const user = await Users.findOne({ email });
+        if (!user) throw new CustomError("Incorrect email or password!", 400);
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) throw new CustomError("Incorrect email or password!", 400);
+  
+        if (user.type === "super" || user.type === "user") {
+          let key;
+          if (user.email === "youssefwerfellicpm@gmail.com") {
+            key = "000000";
+          } else {
+            key = crypto.randomInt(100000, 999999).toString();
+          }
+          await Users.findByIdAndUpdate(
+            user._id,
+            {
+              $set: {
+                code: {
+                  key: key,
+                  expireIn: Date.now() + 60 * 60 * 1000, // 1 hour
+                  attempts: 3,
+                },
+              },
+            },
+            { new: true }
+          );
+  
+          const subject = "Account Verification - GO FAST";
+          await sendMail(user.email, subject, templateMailVerifyMail(key));
+  
+          return res.status(200).json({ message: "Please check your email." });
+        }
+        res.status(400).json({ message: "User not admin." });
+      } catch (error) {
+        errorCatch(error,req, res);
+      }
+    }
+
+  static async verifyAccountAdmin(req, res) {
     try {
       const { code, email } = req.body;
 
       const user = await Users.findOne({ email });
+      if (!user) throw new CustomError("User not found.", 404);
+      if (!user.code)
+        throw new CustomError("Please sign in before verifying your account.");
+      if (user.code.attempts === 1)
+        throw new CustomError("Out of attempts. Please try again later.", 402);
 
-      if (!user.isActive)
-        throw new CustomError(
-          "your account is not active. please contact your administrator for active your account.",
-          400
-        );
+      if (user.code.key !== code || user.code.expireIn <= Date.now()) {
+        if (user.code.key !== code) {
+          await Users.updateOne(
+            { _id: user._id },
+            { $set: { "code.attempts": user.code.attempts - 1 } }
+          );
+          throw new CustomError(user.code.attempts - 1, 405);
+        } else {
+          throw new CustomError("Code expired! Please re-log in.", 403);
+        }
+      }
 
-      await verifyCode(user, code);
-
-      // Remove the code field using $unset with an empty null value
-      await Users.updateOne({ _id: user._id }, { $unset: { code: null } });
-
-      const token = generation_JWT_Token(user, TOKEN_EXPIRE_IN_SUPER);
-      res.status(200).json({ message: "User logged in successfully.", token });
+      await Users.updateOne(
+        { _id: user._id },
+        {
+          $unset: { code: "" },
+          $set: { active: true },
+        }
+      );
+      if (user.new === true) {
+        return res.status(455).json({ message: "Please change password " });
+      } else {
+        const token = generation_JWT_Token(user,(15*60*1000));
+        res
+          .status(200)
+          .json({ message: "User logged in successfully.", token });
+      }
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error,req, res);
     }
   }
 
@@ -274,10 +330,9 @@ export default class AuthController {
 
       await verifyCode(user, code);
 
-      // Remove the code field using $unset with an empty null value and change password
       await Users.updateOne(
         { _id: user._id },
-        { $unset: { code: null, password: password } }
+        { $unset: { code: null, password: password ,new :null}} ,
       );
       res.status(200).json({ message: "Password updated successfully ." });
     } catch (error) {
@@ -304,9 +359,8 @@ export default class AuthController {
     try {
       const { password, email } = req.body;
       const user = await Users.findOneAndUpdate(
-        { email },
+        { email,new: true  },
         { $unset: { code: null, password: password } },
-        { new: true }
       );
 
       if (user.groupId) {
@@ -318,7 +372,7 @@ export default class AuthController {
           user.defaultLink = defaultFeature.featureId.link;
         }
       }
-      const token = generation_JWT_Token(user, TOKEN_EXPIRE_IN_USERS);
+      const token = generation_JWT_Token(user, 15*60*1000);
       res.status(200).json({ message: "User logged in successfully.", token });
     } catch (error) {
       

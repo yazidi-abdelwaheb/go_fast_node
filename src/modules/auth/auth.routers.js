@@ -20,7 +20,7 @@ routers.post(
   "/verif-account",
   verifyLoginSuperValidators,
   checkValidationErrors,
-  Controller.verifyLoginSuper
+  Controller.verifyAccountAdmin
 );
 
 routers.post(
