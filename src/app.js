@@ -47,4 +47,10 @@ app.use("/api/user-feature", isAuth, userFeatureRouters);
 app.use("/media/photo/user", isAuth)
 app.use("/media/photo/product", isAuth)
 
+
+app.use((req, res, next) => {
+  res.status(404).json({ message: `Route ${req.method} ${req.originalUrl} not found` });
+});
+
+
 export default app;

@@ -26,7 +26,8 @@ export default class ProductsController {
         data,
       });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -73,7 +74,8 @@ export default class ProductsController {
         .status(201)
         .json({ message: "relation  user features created successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -86,7 +88,8 @@ export default class ProductsController {
       const userFature = await model.findById(id);
       res.status(200).json(userFature);
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -134,9 +137,12 @@ export default class ProductsController {
         }
       );
 
-      res.status(200).json({ message: "relation  user features updated successfully." });
+      res
+        .status(200)
+        .json({ message: "relation  user features updated successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -149,11 +155,11 @@ export default class ProductsController {
       await model.deleteOne({ _id });
 
       res.status(200).json({
-        message:
-          "relation user Fature deleted successfully. !",
+        message: "relation user Fature deleted successfully. !",
       });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 }

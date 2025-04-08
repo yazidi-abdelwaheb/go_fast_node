@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import Users from "../modules/users/users.schema.js";
 import {
-  actions,
+  featuresActionsEnum,
   CustomError,
   errorCatch,
-  features,
+  featuresCodeEnum,
   featureStatus,
   UserTypeEnum,
 } from "../shared/shared.exports.js";
@@ -40,8 +40,11 @@ export const isAuth = async (req, res, next) => {
     } catch (err) {
       throw new CustomError("401 Unauthorized", 401);
     }
-    
-    const userData = await Users.findOne({ _id: user._id } , { isActive: 1 , lang : 1});
+
+    const userData = await Users.findOne(
+      { _id: user._id },
+      { isActive: 1, lang: 1 }
+    );
 
     if (!userData || !userData.isActive) {
       throw new CustomError(
@@ -53,10 +56,11 @@ export const isAuth = async (req, res, next) => {
     req.user = user;
     req.user.lang = userData.lang;
     //console.log(req.user);
-    
+
     next();
   } catch (error) {
-    errorCatch(error, res);
+    
+    errorCatch(error, req , res);
   }
 };
 
@@ -69,7 +73,7 @@ export const isAuthorized = (features_) => async (req, res, next) => {
     for (const feature of features_) {
       const { code } = feature;
       const actionsFeature = feature.actions;
-      if (!code || !Object.values(features).includes(code)) {
+      if (!code || !Object.values(featuresCodeEnum).includes(code)) {
         throw new CustomError(`Bad code ${code}`, 500);
       }
 
@@ -78,7 +82,7 @@ export const isAuthorized = (features_) => async (req, res, next) => {
       }
 
       for (const actionFeature of actionsFeature) {
-        if (!Object.values(actions).includes(actionFeature)) {
+        if (!Object.values(featuresActionsEnum).includes(actionFeature)) {
           throw new CustomError(`Bad action ${actionFeature} of ${code}`, 500);
         }
       }
@@ -117,7 +121,7 @@ export const isAuthorized = (features_) => async (req, res, next) => {
     }
     throw new CustomError("Forbidden access", 403);
   } catch (e) {
-    return errorCatch(e, res);
+    return errorCatch(e, req , res);
   }
 };
 
@@ -138,7 +142,8 @@ const verifyType = (req, res, next, type) => {
     }
     throw new CustomError("403 Forbidden access", 403);
   } catch (error) {
-    errorCatch(error, res);
+    
+    errorCatch(error, req , res);
   }
 };
 
@@ -161,6 +166,7 @@ export const isActive = async (req, res, next) => {
       403
     );
   } catch (error) {
-    errorCatch(error, res);
+    
+    errorCatch(error, req , res);
   }
 };

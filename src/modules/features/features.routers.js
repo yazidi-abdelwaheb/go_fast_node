@@ -14,7 +14,7 @@ routers.get("/", Controller.getList);
 // ****** Get all ******** //
 routers.get("/all", Controller.all);
 // ****** Get by link ******** //
-routers.post("/link", Controller.getSingleFeatureByLink);
+routers.get("/link", Controller.getSingleFeatureByLink);
 // ****** Get list parents ******** //
 routers.get("/parents", Controller.getListParents);
 // ****** Create one ******** //

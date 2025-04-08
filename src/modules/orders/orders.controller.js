@@ -45,22 +45,23 @@ export default class OrdersController {
         ],
         condictions,
         {
-          from : "products",
-          localField:"productId",
-          foreignField:"_id",
-          as: "productId"
+          from: "products",
+          localField: "productId",
+          foreignField: "_id",
+          as: "productId",
         }
       );
 
       res.status(200).json({
-        total : totalElement,
+        total: totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,
         data,
       });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -103,7 +104,8 @@ export default class OrdersController {
         shared_code: shared_code,
       });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -116,7 +118,8 @@ export default class OrdersController {
       const order = await model.findById(orderId).populate("productId");
       res.status(200).json(order);
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -159,7 +162,8 @@ export default class OrdersController {
 
       res.status(200).json({ message: "order updated successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -173,7 +177,8 @@ export default class OrdersController {
 
       res.status(200).json({ message: "order deleted successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 }

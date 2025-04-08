@@ -46,6 +46,29 @@ const featureStatus = {
 };
 Object.freeze(featureStatus);
 
+const featuresCodeEnum = {
+  setting: "setting",
+  account: "account",
+  profile: "profile",
+  administration: "administration",
+  company: "company",
+  features: "features",
+  groups: "groups",
+  users: "users",
+};
+Object.freeze(featuresCodeEnum);
+
+const featuresActionsEnum = {
+  list: "list",
+  create: "create",
+  read: "read",
+  update: "update",
+  delete: "delete",
+};
+Object.freeze(featuresActionsEnum);
+
+//****** ORDERS ENUMS *******
+
 const Orderstatus = {
   pending: "pending",
   confirmed: "confirmed",
@@ -56,26 +79,7 @@ const Orderstatus = {
 };
 Object.freeze(Orderstatus);
 
-const features = {
-  setting: "setting",
-  account: "account",
-  profile: "profile",
-  administration: "administration",
-  company: "company",
-  features: "features",
-  groups: "groups",
-  users: "users",
-};
-Object.freeze(features);
 
-const actions = {
-  list: "list",
-  create: "create",
-  read: "read",
-  update: "update",
-  delete: "delete",
-};
-Object.freeze(actions);
 
 export {
   UserTypeEnum,
@@ -84,8 +88,8 @@ export {
   userState,
   featureStatus,
   Orderstatus,
-  features,
-  actions,
+  featuresCodeEnum,
+  featuresActionsEnum,
   UserLanguagesEnum,
   UserStatusEnum
 };
