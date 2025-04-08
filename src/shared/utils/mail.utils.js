@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
  * @param {string} body string to html template
  * @returns {Promise} promise
  */
-export default async function sendMail(to, subject, body) {
+export async function sendMail(to, subject, body) {
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: to,

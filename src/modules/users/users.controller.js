@@ -15,7 +15,7 @@ export default class UsersController {
       const limit = parseInt(req.query.limit, 10) || 10;
       const search = req.query.search || "";
       const filterStatus = req.query.filterStatus || "";
-      
+
       const filter = { type: { $ne: "super" } };
       if (filterStatus) {
         filter.status = { $in: filterStatus.split(",") };
@@ -44,7 +44,7 @@ export default class UsersController {
         data,
       });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -90,7 +90,7 @@ export default class UsersController {
 
       res.status(201).json({ message: "User created successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -103,7 +103,7 @@ export default class UsersController {
       const user = await model.findById(userId).populate("groupId");
       res.status(200).json(user);
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -140,13 +140,12 @@ export default class UsersController {
           email: user.email,
           password: user.password,
           groupId: user.groupId,
-          lang: user.lang,
         }
       );
 
       res.status(200).json({ message: "user updated successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -160,7 +159,7 @@ export default class UsersController {
 
       res.status(200).json({ message: "User deleted successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -174,7 +173,7 @@ export default class UsersController {
 
       res.status(200).json(user);
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -213,7 +212,7 @@ export default class UsersController {
       );
       res.status(200).json({ message: "Account updated successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -238,7 +237,7 @@ export default class UsersController {
 
       res.status(200).json({ message: "Language updated successfully" });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -263,7 +262,7 @@ export default class UsersController {
 
       res.status(200).json({ message: "Status updated successfully" });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 }

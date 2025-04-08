@@ -25,17 +25,12 @@ export class CustomError extends Error {
  * @param {Response} res This Fetch API interface represents the response to a request
  * @returns {Response}  response object with error message and status code
  */
-export const errorCatch = (error, res) => {
-  if (error && error.message && error.statusCode) {
-    console.error(error.message);
-    return res.status(error.statusCode).json({ message: error.message });
-  }
-  if (error && error.message) {
-    console.error(error.message);
-    return res.status(500).json({ message: error.message });
-  }
-  console.error(error);
-  return res.status(500).json({ message: "Server Error" });
+export const errorCatch = (error, req, res) => {
+  const endpoint = `${req.method} ${req.originalUrl}` || "Unknown endpoint";
+  const statusCode = error.statusCode || 500;
+  const message = error.message || "Server Error";
+  console.error(`[${endpoint}] : ${message} - ${statusCode}`);
+  return res.status(statusCode).json({ message: message });
 };
 
 /***********************  generations tools ***********************/
@@ -171,7 +166,7 @@ export const getPaginatedData = async (
   const result = await model.aggregate(pipeline);
   const data = result[0]?.data || [];
   const totalElement = result[0]?.totalCount?.count || 0;
-  const totalPages = Math.ceil( totalElement / limit);
+  const totalPages = Math.ceil(totalElement / limit);
 
   return { data, totalElement, totalPages };
 };

@@ -35,7 +35,7 @@ export default class GroupController {
         data,
       });
     } catch (error) {
-      errorCatch(error, res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -113,9 +113,7 @@ export default class GroupController {
 
       return res.status(201).json({ message: "Group created successfully." });
     } catch (e) {
-      console.log(e);
-
-      return errorCatch(e, res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -128,7 +126,7 @@ export default class GroupController {
       const group = await Group.findById(id);
       return res.status(200).json(group);
     } catch (e) {
-      return errorCatch(e, res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -201,7 +199,7 @@ export default class GroupController {
 
       return res.status(200).json({ message: "group updated successfully." });
     } catch (e) {
-      return errorCatch(e, res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -215,7 +213,8 @@ export default class GroupController {
       await GroupFeature.deleteMany({ groupId: req.params.id });
       return res.status(200).json({ message: "Group deleted successfully " });
     } catch (e) {
-      return errorCatch(e, res);
+      return (e.endpoint = `${req.method} ${req.originalUrl}`);
+      errorCatch(e, req, res);
     }
   }
 
@@ -226,7 +225,8 @@ export default class GroupController {
       }).populate("featureId");
       return res.status(200).json(groupFeature);
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req, res);
     }
   }
 
@@ -241,7 +241,7 @@ export default class GroupController {
 
       return res.status(200).json(list);
     } catch (e) {
-      return errorCatch(e, res);
+      errorCatch(e, req, res);
     }
   }
 }

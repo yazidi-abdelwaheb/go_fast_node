@@ -3,21 +3,20 @@ import {
   CustomError,
   errorCatch,
   getPaginatedData,
-  UserLanguagesEnum
+  UserLanguagesEnum,
 } from "../../shared/shared.exports.js";
 
 const model = Texts;
 
 export default class TextsController {
-
-  static async getTexts (req, res)  {
+  static async getTexts(req, res) {
     try {
       const lang = req.query.lang || "en"; // default language english = "en"
-  
+
       if (!Object.values(UserLanguagesEnum).includes(lang)) {
-        throw new CustomError('Language not supported' , 400)
+        throw new CustomError("Language not supported", 400);
       }
-  
+
       const texts = await model.aggregate([
         {
           $project: {
@@ -27,18 +26,18 @@ export default class TextsController {
           },
         },
       ]);
-  
+
       // Transformer en format { key: "texte" }
       const formattedTexts = texts.reduce((acc, item) => {
         acc[item.key] = item.text;
         return acc;
       }, {});
-  
+
       res.status(200).json(formattedTexts);
     } catch (e) {
-      return errorCatch(e, res);
+      return errorCatch(e, req , res);
     }
-  };
+  }
 
   static async getList(req, res) {
     /**
@@ -49,7 +48,7 @@ export default class TextsController {
       const limit = parseInt(req.query.limit, 10) || 10;
       const search = req.query.search || "";
 
-      const { data,  totalElement, totalPages } = await getPaginatedData(
+      const { data, totalElement, totalPages } = await getPaginatedData(
         model,
         page,
         limit,
@@ -60,14 +59,15 @@ export default class TextsController {
       );
 
       res.status(200).json({
-        total : totalElement,
+        total: totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,
         data,
       });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -106,7 +106,8 @@ export default class TextsController {
 
       res.status(201).json({ message: "Text created successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -119,7 +120,8 @@ export default class TextsController {
       const text = await model.findById(id);
       res.status(200).json(text);
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -159,7 +161,8 @@ export default class TextsController {
 
       res.status(200).json({ message: "Text updated successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -173,7 +176,8 @@ export default class TextsController {
 
       res.status(200).json({ message: "Text deleted successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 }

@@ -37,25 +37,26 @@ export default class ProductsController {
         page,
         limit,
         search,
-        ["label","price"],
+        ["label", "price"],
         condictions,
         {
-          from : "users",
-          localField:"userId",
-          foreignField:"_id",
-          as: "userId"
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userId",
         }
       );
 
       res.status(200).json({
-        total : totalElement,
+        total: totalElement,
         totalPages,
         currentPageNumber: page,
         currentPageSize: limit,
         data,
       });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -85,7 +86,8 @@ export default class ProductsController {
       }).save();
       res.status(201).json({ message: "product created successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -98,7 +100,8 @@ export default class ProductsController {
       const product = await model.findById(productId);
       res.status(200).json(product);
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -129,7 +132,8 @@ export default class ProductsController {
 
       res.status(200).json({ message: "product updated successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -142,9 +146,15 @@ export default class ProductsController {
       await model.deleteOne({ _id });
       await Orders.deleteMany({ productId: _id }); // all Orders associated with product are deleted
 
-      res.status(200).json({ message: "product deleted successfully. And all Orders associated with product are deleted !" });
+      res
+        .status(200)
+        .json({
+          message:
+            "product deleted successfully. And all Orders associated with product are deleted !",
+        });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 }

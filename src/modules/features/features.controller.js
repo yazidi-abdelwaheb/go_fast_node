@@ -26,7 +26,7 @@ export default class FeatureController {
       if (filterStatus) {
         filter.status = { $in: filterStatus.split(",") };
       }
-      
+
       //const features = await Feature.find().populate("parentFeature")
 
       const { data, totalElement, totalPages } = await getPaginatedData(
@@ -51,7 +51,8 @@ export default class FeatureController {
         data,
       });
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -66,7 +67,8 @@ export default class FeatureController {
       });
       return res.status(200).json(Features);
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -80,7 +82,8 @@ export default class FeatureController {
       });
       return res.status(200).json(Features);
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -164,7 +167,8 @@ export default class FeatureController {
             : []
         );
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -197,7 +201,8 @@ export default class FeatureController {
       await new Feature(feature).save();
       return res.status(201).json({ message: "Feature created successfully" });
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -211,7 +216,8 @@ export default class FeatureController {
 
       return res.status(200).json(document);
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -245,7 +251,8 @@ export default class FeatureController {
       await Feature.updateOne({ _id }, feature);
       return res.status(201).json({ message: "Feature updated successfully." });
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -259,7 +266,8 @@ export default class FeatureController {
 
       return res.status(204).json({ message: "Feature updated successfully." });
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 
@@ -271,7 +279,8 @@ export default class FeatureController {
       });
       return res.status(200).json(Features);
     } catch (e) {
-      return errorCatch(e, res);
+      
+      errorCatch(e, req , res);
     }
   }
 }

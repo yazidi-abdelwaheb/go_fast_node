@@ -68,7 +68,8 @@ export default class AuthController {
       }
       //res.status(400).json({ message: "User not admin." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -77,7 +78,7 @@ export default class AuthController {
      * #swagger.summary = "Verify login super"
      */
     try {
-      const { code , email } = req.body;
+      const { code, email } = req.body;
 
       const user = await Users.findOne({ email });
 
@@ -95,9 +96,8 @@ export default class AuthController {
       const token = generation_JWT_Token(user, TOKEN_EXPIRE_IN_SUPER);
       res.status(200).json({ message: "User logged in successfully.", token });
     } catch (error) {
-      console.log(error);
       
-      errorCatch(error, res);
+      errorCatch(error, req , res);
     }
   }
 
@@ -146,7 +146,8 @@ export default class AuthController {
           "Account create successfully . Please check your email for active your account.",
       });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -183,7 +184,8 @@ export default class AuthController {
         .status(200)
         .json({ message: "Account activated successfully.", token });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -212,7 +214,8 @@ export default class AuthController {
         .status(200)
         .json({ message: "Verification email sent successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -239,7 +242,8 @@ export default class AuthController {
         .status(200)
         .json({ message: "Verification email sent successfully." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -255,7 +259,8 @@ export default class AuthController {
 
       res.status(200).json({ message: "Code valid." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -276,7 +281,8 @@ export default class AuthController {
       );
       res.status(200).json({ message: "Password updated successfully ." });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 
@@ -315,7 +321,8 @@ export default class AuthController {
       const token = generation_JWT_Token(user, TOKEN_EXPIRE_IN_USERS);
       res.status(200).json({ message: "User logged in successfully.", token });
     } catch (error) {
-      errorCatch(error, res);
+      
+      errorCatch(error, req , res);
     }
   }
 }
@@ -370,7 +377,7 @@ const verifyCode = async (user, code) => {
     throw new CustomError("Out of attempts. Please try again later.", 402);
 
   // Check if the code is incorrect or expired
-  if (user.code.key !==  code || user.code.expireIn <= Date.now()) {
+  if (user.code.key !== code || user.code.expireIn <= Date.now()) {
     if (user.code.key !== code) {
       // Decrement the number of attempts
       user.code.attempts--;

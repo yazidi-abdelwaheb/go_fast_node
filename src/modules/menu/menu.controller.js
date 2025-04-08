@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import {
-  actions,
+  featuresActionsEnum,
   featureStatus,
   errorCatch,
 } from "../../shared/shared.exports.js";
@@ -135,7 +135,7 @@ export default class MenuController {
 
       const featuresAuth = features.map((f) => {
         const feature = { code: f.code, actions: [] };
-        Object.values(actions).forEach((action) => {
+        Object.values(featuresActionsEnum).forEach((action) => {
           if (f[action]) feature.actions.push(action);
         });
         return feature;
@@ -165,7 +165,7 @@ export default class MenuController {
 
       return res.status(200).json({ menu: data, features: featuresAuth });
     } catch (e) {
-      return errorCatch(e, res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -197,7 +197,7 @@ export default class MenuController {
 
       return res.status(200).json(data);
     } catch (e) {
-      return errorCatch(e, res);
+      errorCatch(e, req, res);
     }
   }
 }
