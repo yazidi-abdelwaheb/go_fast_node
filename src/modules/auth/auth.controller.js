@@ -159,6 +159,15 @@ export default class AuthController {
           .status(455)
           .json({ message: "Please change password ", token: tokenEmail });
       } else {
+        if (user.groupId) {
+          const defaultFeature = await GroupFeature.findOne({
+            groupId: user.groupId,
+            defaultFeature: true,
+          }).populate("featureId");
+          if (defaultFeature) {
+            user.defaultLink = defaultFeature.featureId.link;
+          }
+        }
         const token = generation_JWT_Token(user, 15 * 60 * 1000);
         res
           .status(200)
