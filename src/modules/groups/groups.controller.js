@@ -210,7 +210,7 @@ export default class GroupController {
     try {
       const _id = req.params.id;
       await Group.deleteOne({ _id });
-      await GroupFeature.deleteMany({ groupId: req.params.id });
+      await GroupFeature.deleteMany({ groupId: _id });
       return res.status(200).json({ message: "Group deleted successfully " });
     } catch (e) {
       return (e.endpoint = `${req.method} ${req.originalUrl}`);

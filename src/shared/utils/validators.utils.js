@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-
+import { Types } from "mongoose";
 
 /********************** ERROR VALIDATION MIDDLEWARES  **********************/
 /**
@@ -26,7 +26,6 @@ export const checkValidationErrors = (req, res, next) => {
 };
 
 /************** Custom Express Validator ******************/
-import { Types } from "mongoose";
 /**
  * custom validator unique value for insert
  * @param {schema} model

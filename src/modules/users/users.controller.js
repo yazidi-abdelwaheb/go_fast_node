@@ -1,10 +1,15 @@
 import Users from "./users.schema.js";
-import { CustomError, errorCatch, getPaginatedData, uploadImage } from "../../shared/shared.exports.js";
-import crypto from "crypto";
-import GroupFeature from "../groups/group-feature.schema.js";
-import { Types } from "mongoose";
+import {
+  CustomError,
+  errorCatch,
+  getPaginatedData,
+  uploadImage,
+} from "../../shared/shared.exports.js";
+import UserFeature from "../user-feature/user-feature.schema.js";
+import fs from "fs";
+import path from "path";
+import { MulterError } from "multer";
 const model = Users;
-
 export default class UsersController {
   static async getList(req, res) {
     /**
@@ -44,7 +49,26 @@ export default class UsersController {
         data,
       });
     } catch (error) {
-      errorCatch(e, req, res);
+      errorCatch(error, req, res);
+    }
+  }
+
+  static async getAll(req, res) {
+    try {
+      const list = await Users.find(
+        {
+          companyId: req.user.companyId,
+        },
+        {
+          first_name: 1,
+          last_name: 1,
+          email: 1,
+          avatar: 1,
+        }
+      );
+      res.status(200).json(list);
+    } catch (error) {
+      errorCatch(error, req, res);
     }
   }
 
@@ -156,6 +180,7 @@ export default class UsersController {
     try {
       const _id = req.params.id;
       await model.deleteOne({ _id });
+      await UserFeature.deleteMany({ userId: _id });
 
       res.status(200).json({ message: "User deleted successfully." });
     } catch (error) {
@@ -268,38 +293,54 @@ export default class UsersController {
 
   static async updateMyAvatar(req, res) {
     /**
-     * #swagger.summary = Update avatar of the connected user. Please use Postman for testing this endpoint.
+     * #swagger.summary = "Update the avatar of the conncted user. Please use postman for testing this endpoint."
      */
+
     try {
       const userId = req.user._id;
-  
-      // Middleware to upload the image
-      const upload = uploadImage("avatar");
+
+      // Use upload middleware for image handling
+      const upload = uploadImage("private", "avatar");
+
       upload(req, res, async (err) => {
-        if (err instanceof multer.MulterError) {
-          throw new CustomError('Error uploading avatar. Please try again later.' , 500);
+        if (err instanceof MulterError) {
+          throw new CustomError(
+            "Error uploading avatar. Please try again later.",
+            500
+          );
         } else if (err) {
-          throw new Error(err.message);
+          throw new CustomError(err.message, 400);
         }
-  
-        // Check if the file has been uploaded successfully
+
+        // Check if a file has been uploaded
         if (!req.file) {
-          throw new Error('Avatar was not uploaded. Please try again later.');
+          throw new CustomError("No avatar uploaded. Please try again.", 400);
         }
-  
-        // Update the user's avatar with the URL of the uploaded image
+
+        // Get the old avatar path to delete it
+        const user = await Users.findById(userId).select("avatar");
+        const oldAvatar = user?.avatar;
+
+        if (oldAvatar) {
+          const oldAvatarPath = path.join("src", "private", oldAvatar);
+          if (fs.existsSync(oldAvatarPath)) {
+            fs.unlinkSync(oldAvatarPath); // Delete old avatar from filesystem
+          }
+        }
+
+        // Construct new avatar path
         const avatarUrl = `/avatars/${req.file.filename}`;
-  
-        // Update the user with the new avatar URL
+
+        // Update user with new avatar URL
         await Users.updateOne({ _id: userId }, { avatar: avatarUrl });
-  
+
         res.status(200).json({
           message: "Avatar updated successfully.",
+          avatar: avatarUrl,
         });
       });
     } catch (error) {
       errorCatch(error, req, res);
     }
   }
-  
 }

@@ -6,7 +6,8 @@ import {
   deleteOneValidation,
   updateOneValidation,
 } from "./features.validator.js";
-import { checkValidationErrors } from "../../shared/shared.exports.js";
+import { checkValidationErrors, featuresActionsEnum, featuresCodeEnum } from "../../shared/shared.exports.js";
+import { isAuthorized } from "../../middlewares/auth.middlewares.js";
 const routers = Router();
 
 // ****** Get list ******** //
@@ -20,6 +21,12 @@ routers.get("/parents", Controller.getListParents);
 // ****** Create one ******** //
 routers.post(
   "/",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.features,
+      actions: [featuresActionsEnum.create],
+    },
+  ]),
   createOneValidation,
   checkValidationErrors,
   Controller.createOne
@@ -27,6 +34,12 @@ routers.post(
 // ****** Read one ******** //
 routers.get(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.features,
+      actions: [featuresActionsEnum.read],
+    },
+  ]),
   readOneValidation,
   checkValidationErrors,
   Controller.readOne
@@ -34,6 +47,12 @@ routers.get(
 // ****** Update one ******** //
 routers.put(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.features,
+      actions: [featuresActionsEnum.update],
+    },
+  ]),
   updateOneValidation,
   checkValidationErrors,
   Controller.updateOne
@@ -41,6 +60,12 @@ routers.put(
 // ****** Delete one ******** //
 routers.delete(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.features,
+      actions: [featuresActionsEnum.delete],
+    },
+  ]),
   deleteOneValidation,
   checkValidationErrors,
   Controller.deleteOne

@@ -5,6 +5,7 @@ import {
   migration_system_commands_names,
   init_migration,
 } from "./src/migrations/utils.js";
+import { createDirectoriesPhotos } from "./src/shared/shared.exports.js";
 
 async function main() {
   if (migration_system_commands_names.indexOf(process.argv[2]) !== -1) {
@@ -24,6 +25,11 @@ async function main() {
 
     // Conecte to database
     await setupMongoServer();
+
+    /**
+     * cerate directories media if not existe.
+     */
+    createDirectoriesPhotos()
 
     // Initialize the migration system if mode is prod
     if (process.env.NODE_ENV === process.env.PROD_MODE) {

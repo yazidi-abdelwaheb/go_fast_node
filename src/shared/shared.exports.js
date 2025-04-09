@@ -49,4 +49,4 @@ export {
   ATTEMPTS_OF_CODE_VALIDATION_SUPER,
 } from "./utils/const.js";
 
-export { uploadImage, createDirectoriesphotos } from "./utils/multer.utils.js";
+export { uploadImage, createDirectoriesPhotos } from "./utils/multer.utils.js";
