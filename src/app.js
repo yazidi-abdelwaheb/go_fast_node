@@ -12,6 +12,7 @@ import menuRouters from "./modules/menu/menu.routers.js";
 import textsRouters from "./modules/texts/text.routers.js";
 import userFeatureRouters from "./modules/user-feature/user-features.routers.js";
 import { isAuth } from "./middlewares/auth.middlewares.js";
+import path from "path";
 const app = express();
 
 app.use(express.json());
@@ -44,8 +45,8 @@ app.use("/api/user-feature", isAuth, userFeatureRouters);
 
 
 // Define endpoint for photos.
-app.use("/media/photo/user", isAuth)
-app.use("/media/photo/product", isAuth)
+app.use("/private", isAuth, express.static(path.join("src", "private")));
+
 
 
 app.use((req, res, next) => {

@@ -263,8 +263,10 @@ export default class FeatureController {
     try {
       const _id = req.params.id;
       await Feature.deleteOne({ _id });
+      await UserFeature.deleteMany({featureId : _id})
+      await GroupFeature.deleteMany({featureId : _id})
 
-      return res.status(204).json({ message: "Feature updated successfully." });
+      return res.status(204).json({ message: "Feature deleted successfully." });
     } catch (e) {
       
       errorCatch(e, req , res);

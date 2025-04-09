@@ -1,12 +1,13 @@
 import express from "express";
 import Controller from "./groups.controller.js";
-import { checkValidationErrors } from "../../shared/shared.exports.js";
+import { checkValidationErrors, featuresActionsEnum, featuresCodeEnum } from "../../shared/shared.exports.js";
 import {
   createOneValidation,
   readOneValidation,
   deleteOneValidation,
   updateOneValidation,
 } from "./groups.validator.js";
+import { isAuthorized } from "../../middlewares/auth.middlewares.js";
 
 const routers = express.Router();
 
@@ -21,6 +22,12 @@ routers.get(
 // ****** Create one ******** //
 routers.post(
   "/",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.groups,
+      actions: [featuresActionsEnum.create],
+    },
+  ]),
   createOneValidation,
   checkValidationErrors,
   Controller.createOne
@@ -28,6 +35,12 @@ routers.post(
 // ****** Read one ******** //
 routers.get(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.groups,
+      actions: [featuresActionsEnum.read],
+    },
+  ]),
   readOneValidation,
   checkValidationErrors,
   Controller.readOne
@@ -35,6 +48,12 @@ routers.get(
 // ****** Update one ******** //
 routers.put(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.groups,
+      actions: [featuresActionsEnum.update],
+    },
+  ]),
   updateOneValidation,
   checkValidationErrors,
   Controller.updateOne
@@ -42,6 +61,12 @@ routers.put(
 // ****** Delete one ******** //
 routers.delete(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.groups,
+      actions: [featuresActionsEnum.delete],
+    },
+  ]),
   deleteOneValidation,
   checkValidationErrors,
   Controller.deleteOne

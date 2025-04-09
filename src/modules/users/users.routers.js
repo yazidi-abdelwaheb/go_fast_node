@@ -9,17 +9,40 @@ import {
   updateMyLanguageValidation,
   updateMyStatusValidation,
 } from "./users.validator.js";
-import { checkValidationErrors } from "../../shared/shared.exports.js";
+import {
+  checkValidationErrors,
+  featuresCodeEnum,
+  featuresActionsEnum,
+} from "../../shared/shared.exports.js";
+import { isAuthorized } from "../../middlewares/auth.middlewares.js";
 
 // ****** Define routes ****** //
 const routers = Router();
 
-routers.get("/", controller.getList);
+// ****** get Lsit users with pagination ****** //
+routers.get(
+  "/",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.users,
+      actions: [featuresActionsEnum.list],
+    },
+  ]),
+  controller.getList
+);
+// ****** get all users ****** //
+routers.get("/all", controller.getAll);
 // ****** get info user connected ******** //
 routers.get("/me", controller.me);
 
 routers.get(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.users,
+      actions: [featuresActionsEnum.read],
+    },
+  ]),
   readOneValidation,
   checkValidationErrors,
   controller.readOne
@@ -27,6 +50,12 @@ routers.get(
 
 routers.post(
   "/",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.users,
+      actions: [featuresActionsEnum.create],
+    },
+  ]),
   createOneValidation,
   checkValidationErrors,
   controller.createOne
@@ -34,6 +63,13 @@ routers.post(
 
 routers.put(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.users,
+      actions: [featuresActionsEnum.update],
+    },
+  ]),
+
   updateOneValidation,
   checkValidationErrors,
   controller.updateOne
@@ -41,6 +77,12 @@ routers.put(
 
 routers.delete(
   "/:id",
+  isAuthorized([
+    {
+      code: featuresCodeEnum.users,
+      actions: [featuresActionsEnum.delete],
+    },
+  ]),
   deleteOneValidation,
   checkValidationErrors,
   controller.deleteOne
@@ -67,4 +109,5 @@ routers.patch(
   controller.updateMyStatus
 );
 
+routers.patch("/avatar", controller.updateMyAvatar);
 export default routers;

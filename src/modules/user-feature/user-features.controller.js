@@ -8,7 +8,7 @@ import UserFeature from "./user-feature.schema.js";
 
 const model = UserFeature;
 
-export default class ProductsController {
+export default class UserFeatureController {
   static async getList(req, res) {
     /**
      * #swagger.summary = "get list of relation user feature"
@@ -18,6 +18,86 @@ export default class ProductsController {
       const limit = parseInt(req.query.limit, 10) || 10;
       const search = req.query.search || "";
 
+      const skip = (page - 1) * limit;
+      const matchStage = {};
+
+      if (search) {
+        const regex = new RegExp(search, "i");
+        matchStage.$or = [
+          { "userId.first_name": regex },
+          { "userId.last_name": regex },
+          { "userId.email": regex },
+          { "featureId.title": regex },
+          { "featureId.code": regex },
+          { "featureId.link": regex },
+        ];
+      }
+
+      const aggregationPipeline = [
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userId",
+          },
+        },
+        {
+          $unwind: "$userId",
+        },
+        {
+          $lookup: {
+            from: "features",
+            localField: "featureId",
+            foreignField: "_id",
+            as: "featureId",
+          },
+        },
+        {
+          $unwind: "$featureId",
+        },
+        {
+          $match: matchStage,
+        },
+        {
+          $project: {
+            status: 1,
+            create: 1,
+            read: 1,
+            update: 1,
+            delete: 1,
+            list: 1,
+            defaultFeature: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            "userId.first_name": 1,
+            "userId.last_name": 1,
+            "userId.email": 1,
+            "userId.avatar": 1,
+            "featureId.code": 1,
+            "featureId.title": 1,
+            "featureId.icon": 1,
+            "featureId.link": 1,
+          },
+        },
+        {
+          $facet: {
+            data: [
+              { $sort: { createdAt: -1 } },
+              { $skip: skip },
+              { $limit: limit },
+            ],
+            totalCount: [{ $count: "count" }],
+          },
+        },
+      ];
+
+      const result = await UserFeature.aggregate(aggregationPipeline);
+
+      const totalElement = result[0].totalCount[0]?.count || 0;
+      const totalPages = Math.ceil(totalElement / limit);
+      const data = result[0].data;
+
       res.status(200).json({
         total: totalElement,
         totalPages,
@@ -26,8 +106,7 @@ export default class ProductsController {
         data,
       });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -60,6 +139,7 @@ export default class ProductsController {
       await new model({
         companyId: req.user.companyId,
         userCreation: req.user._id,
+        userLastUpdate: req.user._id,
         userId: userFeature.userId,
         featureId: userFeature.featureId,
         status: userFeature.status || false,
@@ -72,10 +152,9 @@ export default class ProductsController {
       }).save();
       res
         .status(201)
-        .json({ message: "relation  user features created successfully." });
+        .json({ message: "Relation user features created successfully." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -85,11 +164,15 @@ export default class ProductsController {
      */
     try {
       const id = req.params.id;
-      const userFature = await model.findById(id);
+      const userFature = await model
+        .findById(id)
+        .populate("userId", "first_name last_name email avatar")
+        .populate("featureId", "code title icon link")
+        .populate("userCreation", "first_name last_name email avatar")
+        .populate("userLastUpdate", "first_name last_name email avatar");
       res.status(200).json(userFature);
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -141,8 +224,7 @@ export default class ProductsController {
         .status(200)
         .json({ message: "relation  user features updated successfully." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -158,8 +240,7 @@ export default class ProductsController {
         message: "relation user Fature deleted successfully. !",
       });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 }

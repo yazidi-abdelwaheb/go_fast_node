@@ -23,10 +23,7 @@ import jwt from "jsonwebtoken";
 
 export default class AuthController {
   /*static async login(req, res) {
-    /**
-     * #swagger.summary = "Login"
-     */
-  /*try {
+    try {
       const { email, password } = req.body;
       const user = await Users.findOne({ email });
       if (!user) throw new CustomError("Incorrect email or password!", 400);
@@ -333,11 +330,6 @@ export default class AuthController {
   static async updatePassword(req, res) {
     /**
      * #swagger.summary = update password before 1st login
-     * * #swagger.requestBody = {
-            required: true,
-            content: {
-@@ -357,26 +377,16 @@ export default class AuthController {
-        }
      */
     try {
       const { password, token } = req.body;
