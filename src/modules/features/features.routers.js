@@ -14,6 +14,8 @@ const routers = Router();
 routers.get("/", Controller.getList);
 // ****** Get all ******** //
 routers.get("/all", Controller.all);
+// ****** Get all ******** //
+routers.get("/all/:userId", Controller.all);
 // ****** Get by link ******** //
 routers.get("/link", Controller.getSingleFeatureByLink);
 // ****** Get list parents ******** //

@@ -74,18 +74,40 @@ export default class FeatureController {
 
   static async all(req, res) {
     /**
-     * #swagger.summary ="Get all features."
+     * #swagger.summary = "Get all features."
      */
     try {
-      const Features = await Feature.find({
+      const userId = req.params.userId;
+  
+      // On récupère toutes les features actives
+      const allFeatures = await Feature.find({
         status: featureStatus.active,
-      });
-      return res.status(200).json(Features);
+      })
+  
+      // Si un userId est fourni
+      if (userId) {
+        // On récupère les IDs des features associées à ce user
+        const userFeatures = await UserFeature.find({ userId }).select("featureId").lean();
+        const userFeatureIds = userFeatures.map((uf) => uf.featureId.toString());
+  
+        // On filtre pour ne retourner que les features non assignées à ce user
+        const filteredFeatures = allFeatures.filter(
+          (feature) => !userFeatureIds.includes(feature._id.toString())
+        );
+  
+        return res.status(200).json(filteredFeatures);
+      }
+  
+      // Si pas de userId, on retourne toutes les features actives
+      return res.status(200).json(allFeatures);
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
+  
+  
+
+  
 
   static async getSingleFeatureByLink(req, res) {
     try {
