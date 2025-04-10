@@ -1,7 +1,6 @@
 import express from "express";
 import Controller from "./auth.controller.js";
-import { checkValidationErrors , upload } from "../../shared/shared.exports.js";
-import { isAuth } from "../../middlewares/auth.middlewares.js";
+import { checkValidationErrors } from "../../shared/shared.exports.js";
 import {
   registeryValidators,
   forgetPasswordVerifyCodeValidators,
@@ -71,9 +70,6 @@ routers.patch(
   Controller.updatePassword
 );
 
-routers.post(
-  "/check-token",
-  Controller.checkToken
-);
+routers.post("/check-token", Controller.checkToken);
 
 export default routers;

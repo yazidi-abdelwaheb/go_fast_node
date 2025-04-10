@@ -4,11 +4,14 @@ import {
   errorCatch,
   getPaginatedData,
   uploadImage,
+  UserStatusEnum,
+  UserTypeEnum,
 } from "../../shared/shared.exports.js";
 import UserFeature from "../user-feature/user-feature.schema.js";
 import fs from "fs";
 import path from "path";
 import { MulterError } from "multer";
+import { type } from "os";
 const model = Users;
 export default class UsersController {
   static async getList(req, res) {
@@ -20,11 +23,22 @@ export default class UsersController {
       const limit = parseInt(req.query.limit, 10) || 10;
       const search = req.query.search || "";
       const filterStatus = req.query.filterStatus || "";
+      const filterNewOld = req.query.filterNewOld || "";
+      const filtergroup = req.query.filtergroup || "";
 
       const filter = { type: { $ne: "super" } };
       if (filterStatus) {
         filter.status = { $in: filterStatus.split(",") };
       }
+      if (filterNewOld === "new") {
+        filter["new.value"] =  true;
+      } else if (filterNewOld === "old") {
+        filter["new.value"] = { $exists: false };
+      }
+      if (filtergroup) {
+        filter["groupId.code"] = { $in: filterStatus.split(",") } ;
+      }
+      
 
       const { data, totalElement, totalPages } = await getPaginatedData(
         model,
@@ -41,6 +55,12 @@ export default class UsersController {
         }
       );
 
+      data.map((e) => {
+        const AVATAR_BASE_URL = `${process.env.HOST}:${process.env.PORT}/private`;
+        if (e.avatar) {
+          e.avatar = `${AVATAR_BASE_URL}${e.avatar}`;
+        }
+      });
       res.status(200).json({
         total: totalElement,
         totalPages,
@@ -86,8 +106,7 @@ export default class UsersController {
                       last_name: "Smith",
                       email: "john@example.com",
                       password: "1234567a", 
-                      type: "user",
-                      groupId: "group Id",  
+                      groupId: "groupId",  
                       }
                     }
                 }
@@ -104,12 +123,13 @@ export default class UsersController {
         email: user.email,
         password: user.password,
         companyId: req.user.companyId,
-        type: user.type,
+        type: UserTypeEnum.user,
         isActive: true,
         groupId: user.groupId._id,
-        code: {
-          key: "first_login",
-        },
+        new:{
+          value : true,
+          password : user.password
+        }
       }).save();
 
       res.status(201).json({ message: "User created successfully." });
@@ -156,16 +176,19 @@ export default class UsersController {
     try {
       const _id = req.params.id;
       const { user } = req.body;
-      await model.updateOne(
-        { _id },
-        {
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email,
-          password: user.password,
-          groupId: user.groupId,
-        }
-      );
+      const updateData = {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        password : user.password,
+        groupId: user.groupId
+      };
+      
+      if (user.new && user.new.value) {
+        updateData['new.password'] = user.password; 
+      }
+      
+      await model.updateOne({ _id }, updateData);
 
       res.status(200).json({ message: "user updated successfully." });
     } catch (error) {

@@ -109,5 +109,5 @@ routers.patch(
   controller.updateMyStatus
 );
 
-routers.patch("/avatar", controller.updateMyAvatar);
+routers.patch("/my-avatar", controller.updateMyAvatar);
 export default routers;

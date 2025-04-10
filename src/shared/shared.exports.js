@@ -22,7 +22,6 @@ export {
   generation_JWT_Token,
   generateUniqueUsername,
   generateUniqueCodeForOrders,
-  upload,
 } from "./utils/utils.js";
 
 export {
