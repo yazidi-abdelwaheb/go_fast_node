@@ -54,8 +54,13 @@ const userSchema = new Schema(
       minlength: [8, "Password must be at least 8 characters long"],
     },
     new: {
-      type:Boolean,
-      default:true
+      value:{
+        type :Boolean,
+      },
+      password : {
+        type:String,
+        minlength: [8, "Password must be at least 8 characters long"],
+      }
     },
     code: {
       key: {
@@ -99,7 +104,7 @@ userSchema.pre("save", async function (next) {
   this.username = await generateUniqueUsername(this.first_name);
   next();
 });
-userSchema.pre(["updateOne", "findOneAndUpdate"], async function (next) {
+userSchema.pre(["updateOne", "findOneAndUpdate" , "findByIdAndUpdate" ], async function (next) {
   const update = this.getUpdate();
   // Hash the password before update it to the database if the password is updated
   if (update.password) {
@@ -118,6 +123,23 @@ userSchema.pre(["updateOne", "findOneAndUpdate"], async function (next) {
   }
 
   next();
+});
+
+
+function formatAvatar(doc) {
+  const AVATAR_BASE_URL = `${process.env.HOST}:${process.env.PORT}/private`;
+  if (doc && doc.avatar) {
+    doc.avatar = `${AVATAR_BASE_URL}${doc.avatar}`;
+  }
+}
+
+// Hook pour find, findOne, etc.
+userSchema.post(["aggregate","find", "findOne", "findById"], function (result) {
+  if (Array.isArray(result)) {
+    result.forEach(e=>formatAvatar(e));
+  } else {
+    formatAvatar(result);
+  }
 });
 
 const Users = model("Users", userSchema);

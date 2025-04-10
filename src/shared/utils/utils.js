@@ -126,7 +126,7 @@ export const getPaginatedData = async (
 
   // MongoDB aggregation pipeline
   const pipeline = [
-    { $match: { ...conditions, ...searchQuery } }, // Filtering and search
+    { $match: {  ...searchQuery } },// search
 
     // Population (optional)
     ...(populateOption
@@ -147,6 +147,7 @@ export const getPaginatedData = async (
           },
         ]
       : []),
+      { $match: { ...conditions } }, //Filtering
 
     { $sort: { createdAt: -1 } }, // Sort by latest created
 
@@ -171,19 +172,3 @@ export const getPaginatedData = async (
   return { data, totalElement, totalPages };
 };
 
-//****************** MULTER **********************//
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "/media/photo/user/" + new Date().toISOString().split("T")[0]);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = randomUUID();
-    const filename = `${
-      new Date().toISOString().split("T")[0]
-    }/${uniqueSuffix}.${file.mimetype}`;
-    cb(null, filename);
-  },
-});
-
-export const upload = multer({ storage: storage });

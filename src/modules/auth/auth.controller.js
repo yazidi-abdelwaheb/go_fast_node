@@ -85,7 +85,8 @@ export default class AuthController {
         let key;
         if (
           user.email === "youssefwerfellicpm@gmail.com" ||
-          user.email === "youssefwerfelli5@gmail.com"
+          user.email === "youssefwerfelli5@gmail.com" ||
+          user.email === "yazidiabdelwaheb@gmail.com"
         ) {
           key = "000000";
         } else {
@@ -147,7 +148,7 @@ export default class AuthController {
         }
       );
 
-      if (user.new === true) {
+      if (user.new && user.new.value) {
         const tokenEmail = jwt.sign(
           {
             email: user.email,
@@ -358,8 +359,11 @@ export default class AuthController {
 
       const user = await Users.findOneAndUpdate(
         { email },
-        { $unset: { code: "" }, new: false , password: password }
-        //{ $set:{password: password} },
+        {
+          $unset: { code: "", new: "" },
+          password: password 
+        },
+        { new: true } // option pour retourner le document mis à jour
       );
 
       if (user.groupId) {
