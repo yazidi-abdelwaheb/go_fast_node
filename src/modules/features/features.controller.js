@@ -76,7 +76,7 @@ export default class FeatureController {
      * #swagger.summary ="Get features not assigned to the user or group."
      */
     try {
-      const userId = req.params.id;
+      const userId = req.params.userId;
       let groupId;
       if (userId) {
         const user = Users.findById(userId).select("groupId");
