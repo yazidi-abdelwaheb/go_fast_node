@@ -23,15 +23,15 @@ routers.get(
 
 routers.post(
   "/",
-  createOneValidation,
-  checkValidationErrors,
+  /*createOneValidation,
+  checkValidationErrors,*/
   controller.createOne
 );
 
 routers.put(
   "/:id",
-  updateOneValidation,
-  checkValidationErrors,
+  /*updateOneValidation,
+  checkValidationErrors,*/
   controller.updateOne
 );
 

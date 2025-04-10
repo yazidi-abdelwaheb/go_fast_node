@@ -5,7 +5,7 @@ import Users from "../users/users.schema.js";
 import Features from "../features/features.schema.js";
 
 export const createOneValidation = [
-  body("userFeature.userId")
+  body("userId")
     .isMongoId()
     .withMessage("invalid user id")
     .custom(async (value) => {
