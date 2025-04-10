@@ -118,8 +118,8 @@ export default class UserFeatureController {
             content: {
                 "application/json": {
                     example:{
-                     userFeature :  {
-                      userId: "userId",
+                    userId : "userId"
+                     userFeature :  [{
                       featureId: "featureId",
                       status : false,
                       create : false,
@@ -129,27 +129,30 @@ export default class UserFeatureController {
                       list :false,
                       defaultFeature : false
                       }
-                    }
+                    }]
                 }
             }
         }
      */
     try {
-      const { userFeature } = req.body;
-      await new model({
-        companyId: req.user.companyId,
-        userCreation: req.user._id,
-        userLastUpdate: req.user._id,
-        userId: userFeature.userId,
-        featureId: userFeature.featureId,
-        status: userFeature.status || false,
-        create: userFeature.create || false,
-        read: userFeature.read || false,
-        update: userFeature.update || false,
-        delete: userFeature.delete || false,
-        list: userFeature.list || false,
-        defaultFeature: userFeature.defaultFeature || false,
-      }).save();
+      const { userId, userFeatures } = req.body;
+      for (let userFeatute of userFeatures) {
+        await new model({
+          companyId: req.user.companyId,
+          userCreation: req.user._id,
+          userLastUpdate: req.user._id,
+          userId: userId,
+          featureId: userFeatute.featureId,
+          status: userFeatute.status || false,
+          create: userFeatute.create || false,
+          read: userFeatute.read || false,
+          update: userFeatute.update || false,
+          delete: userFeatute.delete || false,
+          list: userFeatute.list || false,
+          defaultFeature: userFeatute.defaultFeature || false,
+        }).save();
+      }
+
       res
         .status(201)
         .json({ message: "Relation user features created successfully." });
