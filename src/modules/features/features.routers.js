@@ -15,7 +15,7 @@ routers.get("/", Controller.getList);
 // ****** Get all ******** //
 routers.get("/all", Controller.all);
 // ****** Get all ******** //
-routers.get("/all/:userId", Controller.all);
+routers.get("/:userId/all/", Controller.all);
 // ****** Get by link ******** //
 routers.get("/link", Controller.getSingleFeatureByLink);
 // ****** Get list parents ******** //

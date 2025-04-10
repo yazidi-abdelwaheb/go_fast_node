@@ -135,13 +135,13 @@ export default class UserFeatureController {
         }
      */
     try {
-      const { userId, userFeatures } = req.body;
-      for (let userFeatute of userFeatures) {
+      const { user, group } = req.body;
+      for (let userFeatute of group) {
         await new model({
           companyId: req.user.companyId,
           userCreation: req.user._id,
           userLastUpdate: req.user._id,
-          userId: userId,
+          userId: user._id,
           featureId: userFeatute.featureId,
           status: userFeatute.status || false,
           create: userFeatute.create || false,

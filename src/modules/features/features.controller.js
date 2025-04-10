@@ -73,40 +73,52 @@ export default class FeatureController {
 
   static async all(req, res) {
     /**
-     * #swagger.summary ="Get features not assigned to the user or group."
+     * #swagger.summary = "Get features not assigned to the user or group."
      */
     try {
       const userId = req.params.userId;
       let groupId;
+  
       if (userId) {
-        const user = Users.findById(userId).select("groupId");
+        const user = await Users.findById(userId);  // <-- you need await here
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+  
         groupId = user.groupId;
       }
-
+  
       const features = await Feature.find({ status: featureStatus.active });
-
+      
+  
       const userFeatures = userId
-        ? await UserFeature.find({ userId: userId }).select("featureId")
+        ? await UserFeature.find({ userId }).select("featureId")
         : [];
-
+  
       const groupFeatures = groupId
-        ? await GroupFeature.find({ groupId: groupId }).select("featureId")
+        ? await GroupFeature.find({ groupId }).select("featureId")
         : [];
-
+  
       const assignedFeatureIds = [
         ...userFeatures.map((uf) => uf.featureId.toString()),
         ...groupFeatures.map((gf) => gf.featureId.toString()),
       ];
-
-      const unassignedFeatures = features.filter(
-        (feature) => !assignedFeatureIds.includes(feature._id.toString())
-      );
-
+  
+  
+      const unassignedFeatures = [] ;
+      for (let index = 0; index < features.length; index++) {
+        const element = features[index];
+        if (!assignedFeatureIds.includes(element._id.toString())) {
+          unassignedFeatures.push(element);
+        }        
+      }
+      
       return res.status(200).json(unassignedFeatures);
     } catch (e) {
       errorCatch(e, req, res);
     }
   }
+  
 
   static async getSingleFeatureByLink(req, res) {
     try {
