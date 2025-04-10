@@ -6,6 +6,7 @@ import {
 } from "../../shared/shared.exports.js";
 import GroupFeature from "../groups/group-feature.schema.js";
 import UserFeature from "../user-feature/user-feature.schema.js";
+import Users from "../users/users.schema.js";
 import Feature from "./features.schema.js";
 
 export default class FeatureController {
@@ -51,8 +52,7 @@ export default class FeatureController {
         data,
       });
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -67,47 +67,46 @@ export default class FeatureController {
       });
       return res.status(200).json(Features);
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 
   static async all(req, res) {
     /**
-     * #swagger.summary = "Get all features."
+     * #swagger.summary ="Get features not assigned to the user or group."
      */
     try {
-      const userId = req.params.userId;
-  
-      // On récupère toutes les features actives
-      const allFeatures = await Feature.find({
-        status: featureStatus.active,
-      })
-  
-      // Si un userId est fourni
+      const userId = req.params.id;
+      let groupId;
       if (userId) {
-        // On récupère les IDs des features associées à ce user
-        const userFeatures = await UserFeature.find({ userId }).select("featureId").lean();
-        const userFeatureIds = userFeatures.map((uf) => uf.featureId.toString());
-  
-        // On filtre pour ne retourner que les features non assignées à ce user
-        const filteredFeatures = allFeatures.filter(
-          (feature) => !userFeatureIds.includes(feature._id.toString())
-        );
-  
-        return res.status(200).json(filteredFeatures);
+        const user = Users.findById(userId).select("groupId");
+        groupId = user.groupId;
       }
-  
-      // Si pas de userId, on retourne toutes les features actives
-      return res.status(200).json(allFeatures);
+
+      const features = await Feature.find({ status: featureStatus.active });
+
+      const userFeatures = userId
+        ? await UserFeature.find({ userId: userId }).select("featureId")
+        : [];
+
+      const groupFeatures = groupId
+        ? await GroupFeature.find({ groupId: groupId }).select("featureId")
+        : [];
+
+      const assignedFeatureIds = [
+        ...userFeatures.map((uf) => uf.featureId.toString()),
+        ...groupFeatures.map((gf) => gf.featureId.toString()),
+      ];
+
+      const unassignedFeatures = features.filter(
+        (feature) => !assignedFeatureIds.includes(feature._id.toString())
+      );
+
+      return res.status(200).json(unassignedFeatures);
     } catch (e) {
       errorCatch(e, req, res);
     }
   }
-  
-  
-
-  
 
   static async getSingleFeatureByLink(req, res) {
     try {
@@ -189,8 +188,7 @@ export default class FeatureController {
             : []
         );
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -223,8 +221,7 @@ export default class FeatureController {
       await new Feature(feature).save();
       return res.status(201).json({ message: "Feature created successfully" });
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -238,8 +235,7 @@ export default class FeatureController {
 
       return res.status(200).json(document);
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -273,8 +269,7 @@ export default class FeatureController {
       await Feature.updateOne({ _id }, feature);
       return res.status(201).json({ message: "Feature updated successfully." });
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -285,13 +280,12 @@ export default class FeatureController {
     try {
       const _id = req.params.id;
       await Feature.deleteOne({ _id });
-      await UserFeature.deleteMany({featureId : _id})
-      await GroupFeature.deleteMany({featureId : _id})
+      await UserFeature.deleteMany({ featureId: _id });
+      await GroupFeature.deleteMany({ featureId: _id });
 
       return res.status(204).json({ message: "Feature deleted successfully." });
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 
@@ -303,8 +297,7 @@ export default class FeatureController {
       });
       return res.status(200).json(Features);
     } catch (e) {
-      
-      errorCatch(e, req , res);
+      errorCatch(e, req, res);
     }
   }
 }
