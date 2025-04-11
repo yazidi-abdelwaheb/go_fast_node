@@ -148,8 +148,8 @@ export default class UserFeatureController {
       // create new user-features
       for await (let userFeatute of group) {
         const featureId = userFeatute.featureId._id
-        if(await model.findOne({featureId})){
-          await model.deleteMany({featureId})
+        if(await model.findOne({featureId , userId : user._id})){
+          await model.deleteOne({featureId , userId : user._id})
         }
         await new model({
           companyId: req.user.companyId,
