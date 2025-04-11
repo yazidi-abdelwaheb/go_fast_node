@@ -6,6 +6,7 @@ import {
 import { Types } from "mongoose";
 import UserFeature from "./user-feature.schema.js";
 import GroupFeature from "../groups/group-feature.schema.js";
+import Features from "../features/features.schema.js";
 
 const model = UserFeature;
 
@@ -151,6 +152,14 @@ export default class UserFeatureController {
         if(await model.findOne({featureId , userId : user._id})){
           await model.deleteOne({featureId , userId : user._id})
         }
+        const parentFeature = await Features.findById(featureId)
+        await new model({
+          companyId: req.user.companyId,
+          userId: user._id,
+          featureId: parentFeature.featuresIdParent,
+          status: true,
+        }).save();
+
         await new model({
           companyId: req.user.companyId,
           userId: user._id,
