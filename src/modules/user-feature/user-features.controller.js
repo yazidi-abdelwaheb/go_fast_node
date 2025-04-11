@@ -260,11 +260,23 @@ export default class UserFeatureController {
         }
      */
     try {
-      const _id = req.params.id;
       const { user, group } = req.body;
       await model.deleteMany({ userId: user._id });
+
       // create new user-features
       for await (let userFeatute of group) {
+        const featureId = userFeatute.featureId._id
+        if(await model.findOne({featureId , userId : user._id})){
+          await model.deleteOne({featureId , userId : user._id})
+        }
+        const parentFeature = await Features.findById(featureId)
+        await new model({
+          companyId: req.user.companyId,
+          userId: user._id,
+          featureId: parentFeature.featuresIdParent,
+          status: true,
+        }).save();
+
         await new model({
           companyId: req.user.companyId,
           userId: user._id,
@@ -289,14 +301,14 @@ export default class UserFeatureController {
 
   static async deleteOne(req, res) {
     /**
-     * #swagger.summary ="Delete one of relation user Fature."
+     * #swagger.summary ="Delete one of relation user Features."
      */
     try {
-      const _id = req.params.id;
-      await model.deleteOne({ _id });
+      const userId = req.params.userId;
+      await model.deleteMany({ userId });
 
       res.status(200).json({
-        message: "relation user Fature deleted successfully. !",
+        message: "relation user Features deleted successfully. !",
       });
     } catch (error) {
       errorCatch(error, req, res);

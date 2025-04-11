@@ -36,7 +36,7 @@ routers.put(
 );
 
 routers.delete(
-  "/:id",
+  "/:userId",
   /*deleteOneValidation,
   checkValidationErrors,*/
   controller.deleteOne
