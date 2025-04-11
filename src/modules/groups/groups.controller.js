@@ -164,7 +164,7 @@ export default class GroupController {
       const _id = req.params.id;
       await Group.updateOne({ _id }, { code: group.code, label: group.label });
 
-      await GroupFeature.deleteMany({ groupId: req.params.id });
+      await GroupFeature.deleteMany({ groupId: _id });
       for await (const _groupFeature of groupFeature) {
         if (_groupFeature.featureId) {
           const newgroupFeature = new GroupFeature({

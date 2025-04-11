@@ -5,6 +5,7 @@ import {
 } from "../../shared/shared.exports.js";
 import { Types } from "mongoose";
 import UserFeature from "./user-feature.schema.js";
+import GroupFeature from "../groups/group-feature.schema.js";
 
 const model = UserFeature;
 
@@ -24,12 +25,12 @@ export default class UserFeatureController {
       if (search) {
         const regex = new RegExp(search, "i");
         matchStage.$or = [
-          { "userId.first_name": regex },
-          { "userId.last_name": regex },
-          { "userId.email": regex },
-          { "featureId.title": regex },
-          { "featureId.code": regex },
-          { "featureId.link": regex },
+          { "user.first_name": regex },
+          { "user.last_name": regex },
+          { "user.email": regex },
+          { "feature.title": regex },
+          { "feature.code": regex },
+          { "feature.link": regex },
         ];
       }
 
@@ -39,51 +40,59 @@ export default class UserFeatureController {
             from: "users",
             localField: "userId",
             foreignField: "_id",
-            as: "userId",
+            as: "user",
           },
         },
-        {
-          $unwind: "$userId",
-        },
+        { $unwind: "$user" },
         {
           $lookup: {
             from: "features",
             localField: "featureId",
             foreignField: "_id",
-            as: "featureId",
+            as: "feature",
           },
         },
-        {
-          $unwind: "$featureId",
-        },
+        { $unwind: "$feature" },
         {
           $match: matchStage,
         },
         {
+          $group: {
+            _id: "$user._id",
+            user: { $first: "$user" },
+            features: {
+              $push: {
+                code: "$feature.code",
+                title: "$feature.title",
+                icon: "$feature.icon",
+                link: "$feature.link",
+                create: "$create",
+                read: "$read",
+                update: "$update",
+                delete: "$delete",
+                list: "$list",
+                status: "$status",
+                defaultFeature: "$defaultFeature",
+                createdAt: "$createdAt",
+                updatedAt: "$updatedAt",
+              },
+            },
+          },
+        },
+        {
           $project: {
-            status: 1,
-            create: 1,
-            read: 1,
-            update: 1,
-            delete: 1,
-            list: 1,
-            defaultFeature: 1,
-            createdAt: 1,
-            updatedAt: 1,
-            "userId.first_name": 1,
-            "userId.last_name": 1,
-            "userId.email": 1,
-            "userId.avatar": 1,
-            "featureId.code": 1,
-            "featureId.title": 1,
-            "featureId.icon": 1,
-            "featureId.link": 1,
+            _id: "$user._id",
+            first_name: "$user.first_name",
+            last_name: "$user.last_name",
+            email: "$user.email",
+            avatar: "$user.avatar",
+            features: "$features",
           },
         },
         {
           $facet: {
             data: [
-              { $sort: { createdAt: -1 } },
+              { $sort: { creatAt: -1 } },
               { $skip: skip },
               { $limit: limit },
             ],
@@ -118,29 +127,35 @@ export default class UserFeatureController {
             content: {
                 "application/json": {
                     example:{
-                    userId : "userId"
-                     userFeature :  [{
-                      featureId: "featureId",
-                      status : false,
-                      create : false,
-                      read : false,
-                      update : false,
-                      delete : false,
-                      list :false,
-                      defaultFeature : false
-                      }
-                    }]
+                      "user" : {
+                        "_id": "userId"
+                      },
+                      "group" : [
+                          {
+                            "featureId":{
+                              "_id":"featureId"
+                            },
+                            "status": false,
+                            "create": false,
+                            "read": false,
+                            "update": false,
+                            "delete": false,
+                            "list": false,
+                            "defaultFeature": false
+                          }
+                      ]
+                    }
                 }
             }
         }
      */
     try {
       const { user, group } = req.body;
-      for (let userFeatute of group) {
+
+      // create new user-features
+      for await (let userFeatute of group) {
         await new model({
           companyId: req.user.companyId,
-          userCreation: req.user._id,
-          userLastUpdate: req.user._id,
           userId: user._id,
           featureId: userFeatute.featureId,
           status: userFeatute.status || false,
@@ -163,17 +178,45 @@ export default class UserFeatureController {
 
   static async readOne(req, res) {
     /**
-     * #swagger.summary = "Read one by Id of relation  user features."
+     * #swagger.summary = "Read one by userId and return list of features."
      */
     try {
-      const id = req.params.id;
-      const userFature = await model
-        .findById(id)
-        .populate("userId", "first_name last_name email avatar")
-        .populate("featureId", "code title icon link")
-        .populate("userCreation", "first_name last_name email avatar")
-        .populate("userLastUpdate", "first_name last_name email avatar");
-      res.status(200).json(userFature);
+      const { userId } = req.params;
+
+      const userFeatures = await model
+        .find({ userId })
+        .populate("userId", "_id first_name last_name email avatar")
+        .populate("featureId", "_id code title icon link");
+
+      if (userFeatures.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "User not found or has no features." });
+      }
+
+      const data = {
+        _id: userFeatures[0].userId._id,
+        first_name: userFeatures[0].userId.first_name,
+        last_name: userFeatures[0].userId.last_name,
+        email: userFeatures[0].userId.email,
+        avatar: userFeatures[0].userId.avatar,
+        features: userFeatures.map((uf) => ({
+          _id: uf.featureId._id,
+          code: uf.featureId.code,
+          title: uf.featureId.title,
+          icon: uf.featureId.icon,
+          link: uf.featureId.link,
+          create: uf.create,
+          read: uf.read,
+          update: uf.update,
+          delete: uf.delete,
+          list: uf.list,
+          status: uf.status,
+          defaultFeature: uf.defaultFeature,
+        })),
+      };
+
+      res.status(200).json(data);
     } catch (error) {
       errorCatch(error, req, res);
     }
@@ -187,17 +230,23 @@ export default class UserFeatureController {
             content: {
                 "application/json": {
                     example:{
-                     userFeature :  {
-                      userId: "userId",
-                      featureId: "featureId",
-                      status : false,
-                      create : false,
-                      read : false,
-                      update : false,
-                      delete : false,
-                      list :false,
-                      defaultFeature : false
-                      }
+                     "user" : {
+                        "_id": "userId"
+                      },
+                      "group" : [
+                          {
+                            "featureId":{
+                              "_id":"featureId"
+                            },
+                            "status": false,
+                            "create": false,
+                            "read": false,
+                            "update": false,
+                            "delete": false,
+                            "list": false,
+                            "defaultFeature": false
+                          }
+                      ]
                     }
                 }
             }
@@ -205,23 +254,23 @@ export default class UserFeatureController {
      */
     try {
       const _id = req.params.id;
-      const { userFeature } = req.body;
-      await model.updateOne(
-        { _id },
-        {
+      const { user, group } = req.body;
+      await model.deleteMany({ userId: user._id });
+      // create new user-features
+      for await (let userFeatute of group) {
+        await new model({
           companyId: req.user.companyId,
-          userLastUpdate: req.user._id,
-          userId: userFeature.userId,
-          featureId: userFeature.featureId,
-          status: userFeature.status || false,
-          create: userFeature.create || false,
-          read: userFeature.read || false,
-          update: userFeature.update || false,
-          delete: userFeature.delete || false,
-          list: userFeature.list || false,
-          defaultFeature: userFeature.defaultFeature || false,
-        }
-      );
+          userId: user._id,
+          featureId: userFeatute.featureId._id,
+          status: userFeatute.status || false,
+          create: userFeatute.create || false,
+          read: userFeatute.read || false,
+          update: userFeatute.update || false,
+          delete: userFeatute.delete || false,
+          list: userFeatute.list || false,
+          defaultFeature: userFeatute.defaultFeature || false,
+        }).save();
+      }
 
       res
         .status(200)

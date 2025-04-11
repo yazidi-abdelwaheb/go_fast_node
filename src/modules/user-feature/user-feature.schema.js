@@ -45,16 +45,6 @@ const UserFeatureschema = new Schema({
     default: false,
     required: false,
   },
-  userCreation: {
-    type: Schema.Types.ObjectId,
-    ref : 'Users',
-    required : true
-  },
-  userLastUpdate: {
-    type: Schema.Types.ObjectId,
-    ref : 'Users',
-    required : true
-  },
 }, { timestamps: true });
 
 const UserFeature =  model('UserFeature', UserFeatureschema);
