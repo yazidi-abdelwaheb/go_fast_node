@@ -3,6 +3,7 @@ import {
   CustomError,
   getPaginatedData,
   featureStatus,
+  FeaturesTypeEnum,
 } from "../../shared/shared.exports.js";
 import GroupFeature from "../groups/group-feature.schema.js";
 import UserFeature from "../user-feature/user-feature.schema.js";
@@ -88,7 +89,7 @@ export default class FeatureController {
         groupId = user.groupId;
       }
   
-      const features = await Feature.find({ status: featureStatus.active });
+      const features = await Feature.find({ status: featureStatus.active , type : FeaturesTypeEnum.basic });
       
   
       const userFeatures = userId
