@@ -22,7 +22,7 @@ export default class UserFeatureController {
       const search = req.query.search || "";
 
       const skip = (page - 1) * limit;
-      const matchStage = {"feature.type" : FeaturesTypeEnum.basic };
+      const matchStage = { "feature.type": FeaturesTypeEnum.basic };
 
       if (search) {
         const regex = new RegExp(search, "i");
@@ -64,7 +64,7 @@ export default class UserFeatureController {
             user: { $first: "$user" },
             userFeatures: {
               $push: {
-                _id:"$feature._id",
+                _id: "$feature._id",
                 code: "$feature.code",
                 title: "$feature.title",
                 icon: "$feature.icon",
@@ -149,11 +149,11 @@ export default class UserFeatureController {
 
       // create new user-features
       for await (let userFeatute of group) {
-        const featureId = userFeatute.featureId._id
-        if(await model.findOne({featureId , userId : user._id})){
-          await model.deleteOne({featureId , userId : user._id})
+        const featureId = userFeatute.featureId._id;
+        if (await model.findOne({ featureId, userId: user._id })) {
+          await model.deleteOne({ featureId, userId: user._id });
         }
-        const parentFeature = await Features.findById(featureId)
+        const parentFeature = await Features.findById(featureId);
         await new model({
           companyId: req.user.companyId,
           userId: user._id,
@@ -193,7 +193,7 @@ export default class UserFeatureController {
       const userFeatures = await model
         .find({ userId })
         .populate("userId", "_id first_name last_name email avatar")
-        .populate("featureId", "_id code title icon link");
+        .populate("featureId", "_id code title icon link type");
 
       if (userFeatures.length === 0) {
         return res
@@ -207,20 +207,22 @@ export default class UserFeatureController {
         last_name: userFeatures[0].userId.last_name,
         email: userFeatures[0].userId.email,
         avatar: userFeatures[0].userId.avatar,
-        userFeaturesFull: userFeatures.map((uf) => ({
-          _id: uf.featureId._id,
-          code: uf.featureId.code,
-          title: uf.featureId.title,
-          icon: uf.featureId.icon,
-          link: uf.featureId.link,
-          create: uf.create,
-          read: uf.read,
-          update: uf.update,
-          delete: uf.delete,
-          list: uf.list,
-          status: uf.status,
-          defaultFeature: uf.defaultFeature,
-        })),
+        userFeaturesFull: userFeatures
+          .filter((uf) => uf.featureId.type === FeaturesTypeEnum.basic)
+          .map((uf) => ({
+            _id: uf.featureId._id,
+            code: uf.featureId.code,
+            title: uf.featureId.title,
+            icon: uf.featureId.icon,
+            link: uf.featureId.link,
+            create: uf.create,
+            read: uf.read,
+            update: uf.update,
+            delete: uf.delete,
+            list: uf.list,
+            status: uf.status,
+            defaultFeature: uf.defaultFeature,
+          })),
       };
 
       res.status(200).json(data);
@@ -265,11 +267,11 @@ export default class UserFeatureController {
 
       // create new user-features
       for await (let userFeatute of group) {
-        const featureId = userFeatute.featureId._id
-        if(await model.findOne({featureId , userId : user._id})){
-          await model.deleteOne({featureId , userId : user._id})
+        const featureId = userFeatute.featureId._id;
+        if (await model.findOne({ featureId, userId: user._id })) {
+          await model.deleteOne({ featureId, userId: user._id });
         }
-        const parentFeature = await Features.findById(featureId)
+        const parentFeature = await Features.findById(featureId);
         await new model({
           companyId: req.user.companyId,
           userId: user._id,
