@@ -15,9 +15,9 @@ const routers = Router();
 routers.get("/", controller.getList);
 
 routers.get(
-  "/:id",
-  readOneValidation,
-  checkValidationErrors,
+  "/:userId",
+  /*readOneValidation,
+  checkValidationErrors,*/
   controller.readOne
 );
 
@@ -29,7 +29,7 @@ routers.post(
 );
 
 routers.put(
-  "/:id",
+  "/",
   /*updateOneValidation,
   checkValidationErrors,*/
   controller.updateOne
@@ -37,8 +37,8 @@ routers.put(
 
 routers.delete(
   "/:id",
-  deleteOneValidation,
-  checkValidationErrors,
+  /*deleteOneValidation,
+  checkValidationErrors,*/
   controller.deleteOne
 );
 
