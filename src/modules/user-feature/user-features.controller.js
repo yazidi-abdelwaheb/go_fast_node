@@ -60,21 +60,14 @@ export default class UserFeatureController {
           $group: {
             _id: "$user._id",
             user: { $first: "$user" },
-            features: {
+            userFeatures: {
               $push: {
+                _id:"$feature._id",
                 code: "$feature.code",
                 title: "$feature.title",
                 icon: "$feature.icon",
                 link: "$feature.link",
-                create: "$create",
-                read: "$read",
-                update: "$update",
-                delete: "$delete",
-                list: "$list",
                 status: "$status",
-                defaultFeature: "$defaultFeature",
-                createdAt: "$createdAt",
-                updatedAt: "$updatedAt",
               },
             },
           },
@@ -86,7 +79,7 @@ export default class UserFeatureController {
             last_name: "$user.last_name",
             email: "$user.email",
             avatar: "$user.avatar",
-            features: "$features",
+            userFeatures: "$userFeatures",
           },
         },
         {
