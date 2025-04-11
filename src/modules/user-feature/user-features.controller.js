@@ -207,7 +207,7 @@ export default class UserFeatureController {
         last_name: userFeatures[0].userId.last_name,
         email: userFeatures[0].userId.email,
         avatar: userFeatures[0].userId.avatar,
-        userFeatures: userFeatures.map((uf) => ({
+        userFeaturesFull: userFeatures.map((uf) => ({
           _id: uf.featureId._id,
           code: uf.featureId.code,
           title: uf.featureId.title,
