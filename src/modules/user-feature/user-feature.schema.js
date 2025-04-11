@@ -18,23 +18,23 @@ const UserFeatureschema = new Schema({
   },
   status: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   create: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   read: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   update: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   delete: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   list: {
     type: Boolean,
