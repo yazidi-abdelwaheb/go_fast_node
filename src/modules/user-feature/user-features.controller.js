@@ -1,6 +1,7 @@
 import {
   CustomError,
   errorCatch,
+  FeaturesTypeEnum,
   getPaginatedData,
 } from "../../shared/shared.exports.js";
 import { Types } from "mongoose";
@@ -21,7 +22,7 @@ export default class UserFeatureController {
       const search = req.query.search || "";
 
       const skip = (page - 1) * limit;
-      const matchStage = {};
+      const matchStage = {"feature.type" : FeaturesTypeEnum.basic };
 
       if (search) {
         const regex = new RegExp(search, "i");
