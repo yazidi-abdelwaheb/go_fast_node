@@ -262,26 +262,27 @@ export default class UserFeatureController {
         }
      */
     try {
-      const { user, group } = req.body;
-      await model.deleteMany({ userId: user._id });
+      const { userFeatures } = req.body;
+      const userId = req.params.id
+      await model.deleteMany({ userId:userId });
 
       // create new user-features
-      for await (let userFeatute of group) {
+      for await (let userFeatute of userFeatures) {
         const featureId = userFeatute.featureId._id;
-        if (await model.findOne({ featureId, userId: user._id })) {
-          await model.deleteOne({ featureId, userId: user._id });
+        if (await model.findOne({ featureId, userId: userId })) {
+          await model.deleteOne({ featureId, userId: userId });
         }
         const parentFeature = await Features.findById(featureId);
         await new model({
           companyId: req.user.companyId,
-          userId: user._id,
+          userId: userId,
           featureId: parentFeature.featuresIdParent,
           status: true,
         }).save();
 
         await new model({
           companyId: req.user.companyId,
-          userId: user._id,
+          userId: userId,
           featureId: userFeatute.featureId._id,
           status: userFeatute.status || false,
           create: userFeatute.create || false,
