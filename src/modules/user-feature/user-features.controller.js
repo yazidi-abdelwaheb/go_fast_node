@@ -263,7 +263,9 @@ export default class UserFeatureController {
      */
     try {
       const { userFeatures } = req.body;
-      const userId = req.params.id
+      console.log(userFeatures);
+      
+      const userId = req.params.userId
       await model.deleteMany({ userId:userId });
 
       // create new user-features
