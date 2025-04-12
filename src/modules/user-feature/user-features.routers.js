@@ -29,7 +29,7 @@ routers.post(
 );
 
 routers.put(
-  "/",
+  "/:userId",
   /*updateOneValidation,
   checkValidationErrors,*/
   controller.updateOne
