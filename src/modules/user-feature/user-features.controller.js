@@ -270,7 +270,7 @@ export default class UserFeatureController {
 
       // create new user-features
       for await (let userFeatute of userFeatures) {
-        const featureId = userFeatute.featureId._id;
+        const featureId = userFeatute._id;
         if (await model.findOne({ featureId, userId: userId })) {
           await model.deleteOne({ featureId, userId: userId });
         }
@@ -285,7 +285,7 @@ export default class UserFeatureController {
         await new model({
           companyId: req.user.companyId,
           userId: userId,
-          featureId: userFeatute.featureId._id,
+          featureId: userFeatute._id,
           status: userFeatute.status || false,
           create: userFeatute.create || false,
           read: userFeatute.read || false,
