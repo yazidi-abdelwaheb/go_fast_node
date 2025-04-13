@@ -153,6 +153,8 @@ export default class UserFeatureController {
         if (await model.findOne({ featureId, userId: user._id })) {
           await model.deleteOne({ featureId, userId: user._id });
         }
+
+        // added parent feature to user 
         const parentFeature = await Features.findById(featureId);
         await new model({
           companyId: req.user.companyId,
@@ -239,14 +241,9 @@ export default class UserFeatureController {
             content: {
                 "application/json": {
                     example:{
-                     "user" : {
-                        "_id": "userId"
-                      },
-                      "group" : [
+                      "userFeatures" : [
                           {
-                            "featureId":{
-                              "_id":"featureId"
-                            },
+                            "_id":"featureId"
                             "status": false,
                             "create": false,
                             "read": false,
@@ -263,16 +260,17 @@ export default class UserFeatureController {
      */
     try {
       const { userFeatures } = req.body;
-      console.log(userFeatures);
       
-      const userId = req.params.userId
+      const {userId} = req.params
+
+      //deleted all user-features in data base of userId
       await model.deleteMany({ userId:userId });
 
       // create new user-features
       for await (let userFeatute of userFeatures) {
         const featureId = userFeatute._id;
-        if (await model.findOne({ featureId, userId: userId })) {
-          await model.deleteOne({ featureId, userId: userId });
+        if (await model.findOne({ featureId, userId })) {
+          await model.deleteOne({ featureId, userId });
         }
         const parentFeature = await Features.findById(featureId);
         await new model({

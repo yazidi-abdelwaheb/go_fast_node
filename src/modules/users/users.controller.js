@@ -24,7 +24,7 @@ export default class UsersController {
       const search = req.query.search || "";
       const filterStatus = req.query.filterStatus || "";
       const filterNewOld = req.query.filterNewOld || "";
-      const filtergroup = req.query.filtergroup || "";
+      const filtergroup = req.query.filtergroups || "";
 
       const filter = { type: { $ne: "super" } };
       if (filterStatus) {
@@ -36,8 +36,11 @@ export default class UsersController {
         filter["new.value"] = { $exists: false };
       }
       if (filtergroup) {
-        filter["groupId.code"] = { $in: filterStatus.split(",") } ;
+        filter["groupId.code"] = { $in: filtergroup.split(",") } ;
       }
+
+      
+      
       
 
       const { data, totalElement, totalPages } = await getPaginatedData(
@@ -78,6 +81,7 @@ export default class UsersController {
       const list = await Users.find(
         {
           companyId: req.user.companyId,
+          _id: { $ne: req.user._id },
         },
         {
           first_name: 1,
