@@ -23,22 +23,22 @@ routers.get(
 
 routers.post(
   "/",
-  /*createOneValidation,
-  checkValidationErrors,*/
+  createOneValidation,
+  checkValidationErrors,
   controller.createOne
 );
 
 routers.put(
   "/:userId",
-  /*updateOneValidation,
-  checkValidationErrors,*/
+  updateOneValidation,
+  checkValidationErrors,
   controller.updateOne
 );
 
 routers.delete(
   "/:userId",
-  /*deleteOneValidation,
-  checkValidationErrors,*/
+  deleteOneValidation,
+  checkValidationErrors,
   controller.deleteOne
 );
 

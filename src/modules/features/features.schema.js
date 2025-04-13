@@ -11,7 +11,6 @@ const featureschema = new Schema(
       maxlength: 20,
       lowercase: true,
       trim : true,
-      match: /^[a-z0-9-]+$/,
     },
     title: {
       type: String,

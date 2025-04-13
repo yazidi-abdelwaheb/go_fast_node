@@ -5,33 +5,50 @@ import Users from "../users/users.schema.js";
 import Features from "../features/features.schema.js";
 
 export const createOneValidation = [
-  body("userId")
+  body("user._id")
     .isMongoId()
     .withMessage("invalid user id")
+    //.bail()
     .custom(async (value) => {
       await customValidatorId(Users, value, "user");
     }),
 
-  body("userFeature.featureId")
+  body("group")
+    .isArray({ min: 1 })
+    .withMessage("group must be a non-empty array"),
+
+  body("group.*.featureId._id")
     .isMongoId()
     .withMessage("invalid feature id")
+    //.bail()
     .custom(async (value) => {
       await customValidatorId(Features, value, "feature");
     }),
 ];
 
 export const readOneValidation = [
-  param("id")
+  param("userId")
     .isMongoId()
-    .withMessage("invalid userFeature id")
+    .withMessage("invalid user id")
+    //.bail()
     .custom(async (value) => {
-      await customValidatorId(userFeature, value, "userFeature");
+      await customValidatorId(Users, value, "user");
     }),
 ];
 
 export const updateOneValidation = [
   ...readOneValidation,
-  ...createOneValidation,
+  body("userFeatures")
+    .isArray({ min: 1 })
+    .withMessage("userFeatures must be a non-empty array"),
+
+  body("userFeatures.*._id")
+    .isMongoId()
+    .withMessage("invalid feature id")
+    //.bail()
+    .custom(async (value) => {
+      await customValidatorId(Features, value, "feature");
+    }),
 ];
 
 export const deleteOneValidation = [...readOneValidation];
