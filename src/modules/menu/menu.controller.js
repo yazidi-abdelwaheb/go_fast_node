@@ -173,8 +173,8 @@ export default class MenuController {
       
 
       const finalData = [];
-      data.forEach((item) => {
-        if (item.divider) {
+      data.forEach((item,index) => {
+        if (item.divider && index!=0) {
           // Add divider before the item
           finalData.push({
             type: "divider",
