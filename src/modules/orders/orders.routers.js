@@ -18,29 +18,29 @@ routers.get("/", controller.getList);
 
 routers.get(
   "/:id",
-  readOneValidation,
-  checkValidationErrors,
+  /*readOneValidation,
+  checkValidationErrors,*/
   controller.readOne
 );
 
 routers.post(
   "/",
-  createOneValidation,
-  checkValidationErrors,
+  /*createOneValidation,
+  checkValidationErrors,*/
   controller.createOne
 );
 
 routers.put(
   "/:id",
-  updateOneValidation,
-  checkValidationErrors,
+  /*updateOneValidation,
+  checkValidationErrors,*/
   controller.updateOne
 );
 
 routers.delete(
   "/:id",
-  deleteOneValidation,
-  checkValidationErrors,
+  /*deleteOneValidation,
+  checkValidationErrors,*/
   controller.deleteOne
 );
 

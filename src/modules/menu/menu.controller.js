@@ -169,7 +169,7 @@ export default class MenuController {
         data.push(group);
       }
 
-      console.log(data);
+      
       
 
       const finalData = [];
