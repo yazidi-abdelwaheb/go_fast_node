@@ -61,8 +61,7 @@ export default class OrdersController {
         data,
       });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -75,17 +74,37 @@ export default class OrdersController {
             content: {
               "application/json": {
                 example:{
-                  order :  {
-                    productId: "productId",
-                    client : {
-                      fullname : "jhon smith",
-                      phone_number : "+212678901234"
-                    },
-                    distination : {
-                      government : "nabeul",
-                      ville : "nabeul",
-                      link_to_position : "https://www.google.com/maps/example"
-                    }
+                  "order" : {
+                      "product": "Chaise pliante - noire",
+                      "type": "building",
+                      "distination": {
+                          "entrance": "Porte B",
+                          "address_details": "Appartement 3ème étage, immeuble 4",
+                          "phone": "+21612345678",
+                          "place": {
+                          "placeId": "place_abc123",
+                          "name": "Résidence El Amen",
+                          "address": "Rue de la liberté, Tunis",
+                          "location": {
+                              "lat": 36.8065,
+                              "lng": 10.1815
+                          }
+                          }
+                      },
+                      "pick_up": {
+                          "entrance": "Entrée principale",
+                          "address_details": "Boutique 12, RDC",
+                          "phone": "+21698765432",
+                          "place": {
+                          "placeId": "place_xyz456",
+                          "name": "Centre Commercial Carrefour",
+                          "address": "La Marsa, Tunis",
+                          "location": {
+                              "lat": 36.8781,
+                              "lng": 10.3245
+                          }
+                          }
+                      }
                   }
                 }
               }
@@ -95,19 +114,37 @@ export default class OrdersController {
     try {
       const { order } = req.body;
       const newOne = new model({
-        userId : req.user._id,
-        type : order.type,
-        destination : {
-          entrance : order.distination.entrance,
-          address_details : order.distination.address_details,
-          phone : order.distination.phone,
-          place : {
-            placeId : order.distination.place.placeId,
-            
-          }
-          
-        }
-
+        productDesc: typeof order.product === "string" ? order.product : null,
+        userId: req.user._id,
+        type: order.type,
+        destination: {
+          entrance: order.distination.entrance,
+          address_details: order.distination.address_details,
+          phone: order.distination.phone,
+          place: {
+            placeId: order.distination.place.placeId,
+            name: order.distination.place.name,
+            address: order.distination.place.address,
+            location: {
+              lat: order.distination.place.location.lat,
+              lng: order.distination.place.location.lng,
+            },
+          },
+        },
+        pick_up: {
+          entrance: order.pick_up.entrance,
+          address_details: order.pick_up.address_details,
+          phone: order.pick_up.phone,
+          place: {
+            placeId: order.pick_up.place.placeId,
+            name: order.pick_up.place.name,
+            address: order.pick_up.place.address,
+            location: {
+              lat: order.pick_up.place.location.lat,
+              lng: order.pick_up.place.location.lng,
+            },
+          },
+        },
       });
       //newOne.userId =  new Types.ObjectId(req.user._id)
       const shared_code = (await newOne.save()).code;
@@ -116,8 +153,7 @@ export default class OrdersController {
         code: shared_code,
       });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -131,8 +167,7 @@ export default class OrdersController {
       const order = await model.findById(orderId).populate("productId");
       res.status(200).json(order);
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -176,8 +211,7 @@ export default class OrdersController {
 
       res.status(200).json({ message: "order updated successfully." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 
@@ -192,8 +226,7 @@ export default class OrdersController {
 
       res.status(200).json({ message: "order deleted successfully." });
     } catch (error) {
-      
-      errorCatch(error, req , res);
+      errorCatch(error, req, res);
     }
   }
 }

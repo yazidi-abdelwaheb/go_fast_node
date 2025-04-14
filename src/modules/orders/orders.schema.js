@@ -5,7 +5,6 @@ import {
   generateUniqueCodeForOrders,
 } from "../../shared/shared.exports.js";
 
-
 const PointSchema = new Schema(
   {
     entrance: { type: String, trim: true },
@@ -30,6 +29,13 @@ const OrderSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Users",
       required: true,
+    },
+    productRef: {
+      type: Schema.Types.ObjectId,
+      ref: "Products",
+    },
+    productDesc: {
+      type: String,
     },
     destination: {
       type: PointSchema,
