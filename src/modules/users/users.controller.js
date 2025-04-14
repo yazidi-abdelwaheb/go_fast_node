@@ -16,7 +16,9 @@ const model = Users;
 export default class UsersController {
   static async getList(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary  = "Get list of users."
+     * 
      */
     try {
       const page = parseInt(req.query.page, 10) || 1;
@@ -31,17 +33,13 @@ export default class UsersController {
         filter.status = { $in: filterStatus.split(",") };
       }
       if (filterNewOld === "new") {
-        filter["new.value"] =  true;
+        filter["new.value"] = true;
       } else if (filterNewOld === "old") {
         filter["new.value"] = { $exists: false };
       }
       if (filtergroup) {
-        filter["groupId.code"] = { $in: filtergroup.split(",") } ;
+        filter["groupId.code"] = { $in: filtergroup.split(",") };
       }
-
-      
-      
-      
 
       const { data, totalElement, totalPages } = await getPaginatedData(
         model,
@@ -77,6 +75,11 @@ export default class UsersController {
   }
 
   static async getAll(req, res) {
+    /**
+     * #swagger.tags = ['Users']
+     * #swagger.summary = "get List all Users"
+     * 
+     */
     try {
       const list = await Users.find(
         {
@@ -98,6 +101,7 @@ export default class UsersController {
 
   static async createOne(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = "create a new user"
      * 
      * #swagger.requestBody = {
@@ -130,10 +134,10 @@ export default class UsersController {
         type: UserTypeEnum.user,
         isActive: true,
         groupId: user.groupId._id,
-        new:{
-          value : true,
-          password : user.password
-        }
+        new: {
+          value: true,
+          password: user.password,
+        },
       }).save();
 
       res.status(201).json({ message: "User created successfully." });
@@ -144,6 +148,7 @@ export default class UsersController {
 
   static async readOne(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = "Read one by Id of users."
      */
     try {
@@ -157,6 +162,7 @@ export default class UsersController {
 
   static async updateOne(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = "update one of users."
      * #swagger.requestBody = {
             required: true,
@@ -184,14 +190,14 @@ export default class UsersController {
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
-        password : user.password,
-        groupId: user.groupId
+        password: user.password,
+        groupId: user.groupId,
       };
-      
+
       if (user.new && user.new.value) {
-        updateData['new.password'] = user.password; 
+        updateData["new.password"] = user.password;
       }
-      
+
       await model.updateOne({ _id }, updateData);
 
       res.status(200).json({ message: "user updated successfully." });
@@ -202,6 +208,7 @@ export default class UsersController {
 
   static async deleteOne(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary ="Delete one of users."
      */
     try {
@@ -217,6 +224,7 @@ export default class UsersController {
 
   static async me(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = Get Info user connected
      */
     try {
@@ -231,6 +239,7 @@ export default class UsersController {
 
   static async updateMyAccount(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = "Update my account"
      * * #swagger.requestBody = {
             required: true,
@@ -270,6 +279,7 @@ export default class UsersController {
 
   static async updateMyLanguage(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = update language user conected 
      * * #swagger.requestBody = {
             required: true,
@@ -295,6 +305,7 @@ export default class UsersController {
 
   static async updateMyStatus(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = update Status user conected 
      * * #swagger.requestBody = {
             required: true,
@@ -320,6 +331,7 @@ export default class UsersController {
 
   static async updateMyAvatar(req, res) {
     /**
+     * #swagger.tags = ['Users']
      * #swagger.summary = "Update the avatar of the conncted user. Please use postman for testing this endpoint."
      */
 

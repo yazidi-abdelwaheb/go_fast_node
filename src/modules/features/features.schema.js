@@ -56,6 +56,10 @@ const featureschema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Features",
     },
+    divider : {
+      type : Boolean,
+      default : false
+    }
   },
   { timestamps: true }
 );

@@ -1,73 +1,66 @@
 import { model, Schema } from "mongoose";
 import {
+  OrderTypes,
   Orderstatus,
   generateUniqueCodeForOrders,
 } from "../../shared/shared.exports.js";
-const Orderschema = new Schema(
+
+
+const PointSchema = new Schema(
   {
-    productId: {
+    entrance: { type: String, trim: true },
+    address_details: { type: String, trim: true },
+    phone: { type: String, trim: true },
+    place: {
+      placeId: { type: String, trim: true },
+      name: { type: String, trim: true },
+      address: { type: String, trim: true },
+      location: {
+        lat: { type: Number, required: true },
+        lng: { type: Number, required: true },
+      },
+    },
+  },
+  { _id: false }
+);
+
+const OrderSchema = new Schema(
+  {
+    userId: {
       type: Schema.Types.ObjectId,
-      ref: "Products",
+      ref: "Users",
       required: true,
     },
-    distination: {
-      government: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        required: [true, "Government distination is required."],
-        match: [/^[a-zA-Z0-9 ]+$/, "Please entre a valid government name."],
-      },
-      ville: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        required: [true, "ville distination is required."],
-        match: [/^[a-zA-Z0-9 ]+$/, "Please entre a valid ville name."],
-      },
-      //link google map to position client
-      link_to_position: {
-        type: String,
-        required : true,
-      },
+    destination: {
+      type: PointSchema,
+      required: true,
     },
-    client: {
-      fullname: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        required: [true, "distinateur fullname is required."],
-        match: [/^[a-zA-Z0-9 ]+$/, "Please entre a valid fullname."],
-      },
-      phone_number: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        required: [true, "distinateur phone number is required."],
-        match: [/^[+ 0-9]+$/, "Please entre a valid phone number."],
-      },
+    pick_up: {
+      type: PointSchema,
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: Object.values(OrderTypes),
+      default: OrderTypes.building,
     },
     status: {
       type: String,
       enum: Object.values(Orderstatus),
-      default : Orderstatus.pending,
+      default: Orderstatus.pending,
     },
-    shared_code: {
+    code: {
       type: String,
+      unique: true,
     },
   },
   { timestamps: true }
 );
-
-Orderschema.virtual("search").get(function () {
-  return `${this.distination.governament} ${this.distination.ville} ${this.client.fullname} ${this.client.phone_number} ${this.status}`;
-});
-
-Orderschema.pre("save", async function (next) {
-  this.shared_code = await generateUniqueCodeForOrders();
+OrderSchema.pre("save", async function (next) {
+  this.code = await generateUniqueCodeForOrders();
   next();
 });
 
-const Orders = model("Orders", Orderschema);
+const Orders = model("Orders", OrderSchema);
 
 export default Orders;

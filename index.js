@@ -6,6 +6,7 @@ import {
   init_migration,
 } from "./src/migrations/utils.js";
 import { createDirectoriesPhotos } from "./src/shared/shared.exports.js";
+//import {cerateSwaggerOutput} from "./src/shared/swagger/swagger.js"
 
 async function main() {
   if (migration_system_commands_names.indexOf(process.argv[2]) !== -1) {
@@ -30,6 +31,11 @@ async function main() {
      * cerate directories media if not existe.
      */
     createDirectoriesPhotos()
+
+    /**
+     * create swagger doc if not existe.
+     */
+   // cerateSwaggerOutput()
 
     // Initialize the migration system if mode is prod
     if (process.env.NODE_ENV === process.env.PROD_MODE) {

@@ -79,7 +79,11 @@ const Orderstatus = {
 };
 Object.freeze(Orderstatus);
 
-
+const OrderTypes = {
+  building: "building",
+  apartment: "apartment",
+};
+Object.freeze(OrderTypes);
 
 export {
   UserTypeEnum,
@@ -91,5 +95,6 @@ export {
   featuresCodeEnum,
   featuresActionsEnum,
   UserLanguagesEnum,
-  UserStatusEnum
+  UserStatusEnum,
+  OrderTypes
 };
