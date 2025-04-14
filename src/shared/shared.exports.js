@@ -13,6 +13,7 @@ export {
   featuresActionsEnum,
   UserLanguagesEnum,
   UserStatusEnum,
+  OrderTypes
 } from "./enums/enums.js";
 
 export {

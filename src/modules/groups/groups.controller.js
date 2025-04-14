@@ -10,6 +10,7 @@ import GroupFeature from "./group-feature.schema.js";
 export default class GroupController {
   static async getList(req, res) {
     /**
+     * #swagger.tags = ['Groups']
      * #swagger.summary = "Get all groups"
      */
     try {
@@ -41,6 +42,7 @@ export default class GroupController {
 
   static async createOne(req, res) {
     /**
+     * #swagger.tags = ['Groups']
      * #swagger.summary = "Create one groups"
      * * * #swagger.requestBody = {
             required: true,
@@ -119,6 +121,7 @@ export default class GroupController {
 
   static async readOne(req, res) {
     /**
+     * #swagger.tags = ['Groups']
      * #swagger.summary = "Get one groups"
      */
     try {
@@ -132,6 +135,7 @@ export default class GroupController {
 
   static async updateOne(req, res) {
     /**
+     * #swagger.tags = ['Groups']
      * #swagger.summary = "Update one groups"
      * * * #swagger.requestBody = {
             required: true,
@@ -205,6 +209,7 @@ export default class GroupController {
 
   static async deleteOne(req, res) {
     /**
+     * #swagger.tags = ['Groups']
      * #swagger.summary = "Delete one groups"
      */
     try {
@@ -219,6 +224,9 @@ export default class GroupController {
   }
 
   static async get_groupFeatures(req, res) {
+    /**
+     * #swagger.tags = ['Groups']
+     */
     try {
       const groupFeature = await GroupFeature.find({
         groupId: new Types.ObjectId(req.params.id),
@@ -231,6 +239,9 @@ export default class GroupController {
 }
 
   static async getAll(req, res) {
+    /**
+     * #swagger.tags = ['Groups']
+     */
     try {
       const list = await Group.find(
         {

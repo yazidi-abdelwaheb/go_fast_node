@@ -34,10 +34,6 @@ const productschema = new Schema(
   { timestamps: true }
 );
 
-productschema.virtual("search").get(function () {
-  return `${this.label} ${this.price.toString()}`;
-});
-
 productschema.pre("save", async function (next) {
   this.price = parseFloat(this.price).toFixed(3);
   next();

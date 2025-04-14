@@ -7,6 +7,7 @@ const model = Orders;
 export default class OrdersController {
   static async getList(req, res) {
     /**
+     * #swagger.tags = ['Orders']
      * #swagger.summary  = "Get list of Orders."
      */
 
@@ -67,6 +68,7 @@ export default class OrdersController {
 
   static async createOne(req, res) {
     /**
+     * #swagger.tags = ['Orders']
      * #swagger.summary = "add a new order"
      * #swagger.requestBody = {
             required: true,
@@ -93,15 +95,25 @@ export default class OrdersController {
     try {
       const { order } = req.body;
       const newOne = new model({
-        productId: order.productId,
-        client: order.client,
-        distination: order.distination,
+        userId : req.user._id,
+        type : order.type,
+        destination : {
+          entrance : order.distination.entrance,
+          address_details : order.distination.address_details,
+          phone : order.distination.phone,
+          place : {
+            placeId : order.distination.place.placeId,
+            
+          }
+          
+        }
+
       });
       //newOne.userId =  new Types.ObjectId(req.user._id)
-      const shared_code = (await newOne.save()).shared_code;
+      const shared_code = (await newOne.save()).code;
       res.status(201).json({
         message: "order created successfully.",
-        shared_code: shared_code,
+        code: shared_code,
       });
     } catch (error) {
       
@@ -111,6 +123,7 @@ export default class OrdersController {
 
   static async readOne(req, res) {
     /**
+     * #swagger.tags = ['Orders']
      * #swagger.summary = "Read one of Orders."
      */
     try {
@@ -125,6 +138,7 @@ export default class OrdersController {
 
   static async updateOne(req, res) {
     /**
+     * #swagger.tags = ['Orders']
      * #swagger.summary = "update one of Orders."
      * * #swagger.requestBody = {
             required: true,
@@ -169,6 +183,7 @@ export default class OrdersController {
 
   static async deleteOne(req, res) {
     /**
+     * #swagger.tags = ['Orders']
      * #swagger.summary ="Delete one of Orders."
      */
     try {

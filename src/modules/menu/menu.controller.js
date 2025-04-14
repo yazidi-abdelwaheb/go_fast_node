@@ -10,6 +10,9 @@ import GroupFeature from "../groups/group-feature.schema.js";
 
 export default class MenuController {
   static async getMenu(req, res) {
+    /**
+     * #swagger.tags = ['Menu']
+     */
     try {
       let features = [];
       if (req.user.type === "super") {
@@ -163,6 +166,18 @@ export default class MenuController {
         data.push(group);
       }
 
+      const finalData = [];
+      data.forEach((item) => {
+        if (item.divider) {
+          // Add divider before the item
+          finalData.push({
+            type: "divider",
+          });
+        }
+        // Add the original item
+        finalData.push(item);
+      });
+
       return res.status(200).json({ menu: data, features: featuresAuth });
     } catch (e) {
       errorCatch(e, req, res);
@@ -170,6 +185,9 @@ export default class MenuController {
   }
 
   static async getFeatures(req, res) {
+    /**
+     * #swagger.tags = ['Menu']
+     */
     try {
       const features = await Features.aggregate([{ $sort: { order: 1 } }]);
       const groups = features.filter((val) => !val.featuresIdParent);

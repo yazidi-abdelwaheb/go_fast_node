@@ -14,6 +14,7 @@ const model = UserFeature;
 export default class UserFeatureController {
   static async getList(req, res) {
     /**
+     * #swagger.tags = ["User-Features"]
      * #swagger.summary = "get list of relation user feature"
      */
     try {
@@ -116,6 +117,7 @@ export default class UserFeatureController {
 
   static async createOne(req, res) {
     /**
+     * #swagger.tags = ["User-Features"]
      * #swagger.summary = "create new relation  user features."
      * #swagger.requestBody = {
             required: true,
@@ -154,7 +156,7 @@ export default class UserFeatureController {
           await model.deleteOne({ featureId, userId: user._id });
         }
 
-        // added parent feature to user 
+        // added parent feature to user
         const parentFeature = await Features.findById(featureId);
         await new model({
           companyId: req.user.companyId,
@@ -187,6 +189,7 @@ export default class UserFeatureController {
 
   static async readOne(req, res) {
     /**
+     * #swagger.tags = ["User-Features"]
      * #swagger.summary = "Read one by userId and return list of features."
      */
     try {
@@ -235,6 +238,7 @@ export default class UserFeatureController {
 
   static async updateOne(req, res) {
     /**
+     * #swagger.tags = ["User-Features"]
      * #swagger.summary = "update one of relation  user features."
      * #swagger.requestBody = {
             required: true,
@@ -243,7 +247,7 @@ export default class UserFeatureController {
                     example:{
                       "userFeatures" : [
                           {
-                            "_id":"featureId"
+                            "_id":"featureId",
                             "status": false,
                             "create": false,
                             "read": false,
@@ -252,19 +256,19 @@ export default class UserFeatureController {
                             "list": false,
                             "defaultFeature": false
                           }
-                      ]
+                       ]
                     }
-                }
+                  }
             }
-        }
+          }
      */
     try {
       const { userFeatures } = req.body;
-      
-      const {userId} = req.params
+
+      const { userId } = req.params;
 
       //deleted all user-features in data base of userId
-      await model.deleteMany({ userId:userId });
+      await model.deleteMany({ userId: userId });
 
       // create new user-features
       for await (let userFeatute of userFeatures) {
@@ -304,6 +308,7 @@ export default class UserFeatureController {
 
   static async deleteOne(req, res) {
     /**
+     * #swagger.tags = ["User-Features"]
      * #swagger.summary ="Delete one of relation user Features."
      */
     try {

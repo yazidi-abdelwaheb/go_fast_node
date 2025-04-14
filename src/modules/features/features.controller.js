@@ -13,6 +13,7 @@ import Feature from "./features.schema.js";
 export default class FeatureController {
   static async getList(req, res) {
     /**
+     * #swagger.tags = ['Features']
      * #swagger.summary ="Get all Feature pagination ."
      */
     try {
@@ -59,6 +60,7 @@ export default class FeatureController {
 
   static async getListParents(req, res) {
     /**
+     * #swagger.tags = ['Features']
      * #swagger.summary ="Get list parents Feature ."
      */
     try {
@@ -74,6 +76,7 @@ export default class FeatureController {
 
   static async all(req, res) {
     /**
+     * #swagger.tags = ['Features']
      * #swagger.summary = "Get features not assigned to the user or group."
      */
     try {
@@ -122,6 +125,9 @@ export default class FeatureController {
   
 
   static async getSingleFeatureByLink(req, res) {
+    /**
+     * #swagger.tags = ['Features']
+     */
     try {
       const defaultFeature = await Feature.aggregate([
         {
@@ -207,6 +213,7 @@ export default class FeatureController {
 
   static async createOne(req, res) {
     /**
+     * #swagger.tags = ['Features']
      * #swagger.summary ="Create new Feature ."
      * * #swagger.requestBody = {
             required: true,
@@ -240,6 +247,7 @@ export default class FeatureController {
 
   static async readOne(req, res) {
     /**
+     * #swagger.tags = ['Features']
      * #swagger.summary ="Get one Feature ."
      */
     try {
@@ -254,6 +262,7 @@ export default class FeatureController {
 
   static async updateOne(req, res) {
     /**
+     * #swagger.tags = ['Features']
      * #swagger.summary ="Update one Feature ."
      * * #swagger.requestBody = {
             required: true,
@@ -288,6 +297,7 @@ export default class FeatureController {
 
   static async deleteOne(req, res) {
     /**
+     * #swagger.tags = ['Features']
      * #swagger.summary ="Delete one Feature ."
      */
     try {
@@ -303,6 +313,9 @@ export default class FeatureController {
   }
 
   static async getListParents(req, res) {
+    /**
+     * #swagger.tags = ['Features']
+     */
     try {
       const Features = await Feature.find({
         type: { $in: ["group", "collapsable"] },
