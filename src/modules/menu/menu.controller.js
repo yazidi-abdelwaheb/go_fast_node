@@ -34,6 +34,7 @@ export default class MenuController {
           update: true,
           read: true,
           type: feature.type,
+          divider : feature.divider,
           children: [],
         }));
       } else {
@@ -98,6 +99,7 @@ export default class MenuController {
           read: feature.read || false,
           type: feature.featureId.type,
           status: feature.status,
+          divider : feature.featureId.divider,
           children: [],
         }));
 
@@ -116,6 +118,7 @@ export default class MenuController {
           read: feature.read || false,
           type: feature.featureId.type,
           status: feature.status,
+          divider : feature.featureId.divider,
           children: [],
         }));
 
@@ -166,6 +169,9 @@ export default class MenuController {
         data.push(group);
       }
 
+      console.log(data);
+      
+
       const finalData = [];
       data.forEach((item) => {
         if (item.divider) {
@@ -178,7 +184,7 @@ export default class MenuController {
         finalData.push(item);
       });
 
-      return res.status(200).json({ menu: data, features: featuresAuth });
+      return res.status(200).json({ menu: finalData, features: featuresAuth });
     } catch (e) {
       errorCatch(e, req, res);
     }
