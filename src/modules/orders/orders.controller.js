@@ -7,7 +7,7 @@ const model = Orders;
 export default class OrdersController {
   static async getList(req, res) {
     /**
-     * #swagger.tags = ['Orders']
+     * 
      * #swagger.summary  = "Get list of Orders."
      */
 
@@ -67,7 +67,7 @@ export default class OrdersController {
 
   static async createOne(req, res) {
     /**
-     * #swagger.tags = ['Orders']
+     * 
      * #swagger.summary = "add a new order"
      * #swagger.requestBody = {
             required: true,
@@ -159,7 +159,7 @@ export default class OrdersController {
 
   static async readOne(req, res) {
     /**
-     * #swagger.tags = ['Orders']
+     * 
      * #swagger.summary = "Read one of Orders."
      */
     try {
@@ -173,7 +173,7 @@ export default class OrdersController {
 
   static async updateOne(req, res) {
     /**
-     * #swagger.tags = ['Orders']
+     * 
      * #swagger.summary = "update one of Orders."
      * * #swagger.requestBody = {
             required: true,
@@ -217,7 +217,7 @@ export default class OrdersController {
 
   static async deleteOne(req, res) {
     /**
-     * #swagger.tags = ['Orders']
+     * 
      * #swagger.summary ="Delete one of Orders."
      */
     try {

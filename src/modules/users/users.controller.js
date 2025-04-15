@@ -16,7 +16,7 @@ const model = Users;
 export default class UsersController {
   static async getList(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary  = "Get list of users."
      * 
      */
@@ -76,7 +76,7 @@ export default class UsersController {
 
   static async getAll(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = "get List all Users"
      * 
      */
@@ -101,7 +101,7 @@ export default class UsersController {
 
   static async createOne(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = "create a new user"
      * 
      * #swagger.requestBody = {
@@ -148,7 +148,7 @@ export default class UsersController {
 
   static async readOne(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = "Read one by Id of users."
      */
     try {
@@ -162,7 +162,7 @@ export default class UsersController {
 
   static async updateOne(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = "update one of users."
      * #swagger.requestBody = {
             required: true,
@@ -208,7 +208,7 @@ export default class UsersController {
 
   static async deleteOne(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary ="Delete one of users."
      */
     try {
@@ -224,7 +224,7 @@ export default class UsersController {
 
   static async me(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = Get Info user connected
      */
     try {
@@ -239,7 +239,7 @@ export default class UsersController {
 
   static async updateMyAccount(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = "Update my account"
      * * #swagger.requestBody = {
             required: true,
@@ -279,7 +279,7 @@ export default class UsersController {
 
   static async updateMyLanguage(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = update language user conected 
      * * #swagger.requestBody = {
             required: true,
@@ -305,7 +305,7 @@ export default class UsersController {
 
   static async updateMyStatus(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = update Status user conected 
      * * #swagger.requestBody = {
             required: true,
@@ -331,7 +331,7 @@ export default class UsersController {
 
   static async updateMyAvatar(req, res) {
     /**
-     * #swagger.tags = ['Users']
+     * 
      * #swagger.summary = "Update the avatar of the conncted user. Please use postman for testing this endpoint."
      */
 

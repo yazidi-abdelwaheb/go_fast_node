@@ -14,7 +14,7 @@ const model = UserFeature;
 export default class UserFeatureController {
   static async getList(req, res) {
     /**
-     * #swagger.tags = ["User-Features"]
+     * 
      * #swagger.summary = "get list of relation user feature"
      */
     try {
@@ -117,7 +117,7 @@ export default class UserFeatureController {
 
   static async createOne(req, res) {
     /**
-     * #swagger.tags = ["User-Features"]
+     * 
      * #swagger.summary = "create new relation  user features."
      * #swagger.requestBody = {
             required: true,
@@ -189,7 +189,7 @@ export default class UserFeatureController {
 
   static async readOne(req, res) {
     /**
-     * #swagger.tags = ["User-Features"]
+     * 
      * #swagger.summary = "Read one by userId and return list of features."
      */
     try {
@@ -238,7 +238,7 @@ export default class UserFeatureController {
 
   static async updateOne(req, res) {
     /**
-     * #swagger.tags = ["User-Features"]
+     * 
      * #swagger.summary = "update one of relation  user features."
      * #swagger.requestBody = {
             required: true,
@@ -308,7 +308,7 @@ export default class UserFeatureController {
 
   static async deleteOne(req, res) {
     /**
-     * #swagger.tags = ["User-Features"]
+     * 
      * #swagger.summary ="Delete one of relation user Features."
      */
     try {
