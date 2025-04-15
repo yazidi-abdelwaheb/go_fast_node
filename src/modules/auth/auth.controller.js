@@ -74,7 +74,7 @@ export default class AuthController {
 
   static async login(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      */
     try {
       const { email, password } = req.body;
@@ -122,7 +122,7 @@ export default class AuthController {
 
   static async verifyAccountAdmin(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      */
     try {
       const { code, email } = req.body;
@@ -187,7 +187,7 @@ export default class AuthController {
 
   static async registery(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = "Register"
      * * #swagger.requestBody = {
             required: true,
@@ -237,7 +237,7 @@ export default class AuthController {
 
   static async activeAccount(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = "Active Account"
      */
     try {
@@ -275,7 +275,7 @@ export default class AuthController {
 
   static async sendMailActiveAccount(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = "Send email for active account"
      */
     try {
@@ -305,7 +305,7 @@ export default class AuthController {
 
   static async sendMailForgetPassword(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = "send email for forget password"
      */
     try {
@@ -333,7 +333,7 @@ export default class AuthController {
 
   static async validationkeyForgetPassword(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = "Validation code for forgot password"
      */
     try {
@@ -350,7 +350,7 @@ export default class AuthController {
 
   static async updatePassword(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = update password before 1st login
      */
     try {
@@ -402,7 +402,7 @@ export default class AuthController {
 
   static async resetPassword(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = "Reset password"
      */
     try {
@@ -439,7 +439,7 @@ export default class AuthController {
 
   static async checkToken(req, res) {
     /**
-     * #swagger.tags = ['Auth']
+     * 
      * #swagger.summary = function to valided token
      * * #swagger.requestBody = {
             required: true,
