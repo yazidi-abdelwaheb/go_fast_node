@@ -64,10 +64,6 @@ const featureschema = new Schema(
   { timestamps: true }
 );
 
-featureschema.virtual("search").get( function () {
-  return `${this.code} ${this.title}`;
-});
-
 const Features = model("Features", featureschema);
 
 export default Features;

@@ -11,6 +11,7 @@ import ordersRouters from "./modules/orders/orders.routers.js";
 import menuRouters from "./modules/menu/menu.routers.js";
 import textsRouters from "./modules/texts/text.routers.js";
 import userFeatureRouters from "./modules/user-feature/user-features.routers.js";
+import clientsRouters from "./modules/clients/clients.routers.js";
 import { isAuth } from "./middlewares/auth.middlewares.js";
 import path from "path";
 import { swaggerDocumentJson } from "./shared/swagger/utils.js";
@@ -32,7 +33,11 @@ app.use(
  * Swagger documentation
  * create swagger doc if not existe.
  */
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(await swaggerDocumentJson()));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(await swaggerDocumentJson())
+);
 
 // Define endpoint.
 app.use("/api/auth", authRouter /** #swagger.tags =["Auth"] */);
@@ -55,6 +60,12 @@ app.use(
   "/api/user-feature",
   isAuth,
   userFeatureRouters /** #swagger.tags =["User-Features"] */
+);
+
+app.use(
+  "/api/clients",
+  isAuth,
+  clientsRouters /** #swagger.tags =["Clients"] */
 );
 
 // Define endpoint for photos.

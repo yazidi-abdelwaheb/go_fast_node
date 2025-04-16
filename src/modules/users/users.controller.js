@@ -11,9 +11,8 @@ import UserFeature from "../user-feature/user-feature.schema.js";
 import fs from "fs";
 import path from "path";
 import { MulterError } from "multer";
-import { type } from "os";
 const model = Users;
-export default class UsersController {
+export default class UsersController  {
   static async getList(req, res) {
     /**
      * 

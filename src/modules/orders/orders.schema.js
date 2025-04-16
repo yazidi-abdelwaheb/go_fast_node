@@ -30,7 +30,7 @@ const OrderSchema = new Schema(
       ref: "Users",
       required: true,
     },
-    productRef: {
+    productId: {
       type: Schema.Types.ObjectId,
       ref: "Products",
     },

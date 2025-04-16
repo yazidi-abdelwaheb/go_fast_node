@@ -1,5 +1,5 @@
-//import { askQuestion } from "../utils.js";
-import mongoose from "mongoose";
+import { COMPANY_ID } from "../utils.js";
+import  { Types } from "mongoose";
 import { setupMongoServer } from "../../config/db.config.js";
 import Company from "../../modules/companys/companys.schema.js";
 
@@ -14,7 +14,7 @@ const initCompanyMigration = async () => {
     console.log("Creating new company...");
 
     const data = {
-      _id: new mongoose.Types.ObjectId("67bf7cf4c7ef2a1a638f6144"),
+      _id: new Types.ObjectId(COMPANY_ID),
       label: "Go Fast",
       code: "go_fast",
     };
