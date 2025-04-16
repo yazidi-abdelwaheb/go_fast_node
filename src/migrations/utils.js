@@ -132,3 +132,9 @@ export const init_migration = async () => {
     throw error;
   }
 };
+
+// *********  CONST _id  ******** //
+
+export const GROUP_ID_CLIENTS = "67fbdbdfe7da4d514efd0844";
+export const COMPANY_ID = "67bf7cf4c7ef2a1a638f6144";
+

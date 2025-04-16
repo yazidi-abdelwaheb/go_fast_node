@@ -1,8 +1,8 @@
 //****** USER ENUMS *******
 const UserTypeEnum = {
   super: "super",
-  admin: "admin",
   user: "user",
+  clinet: "client",
 };
 Object.freeze(UserTypeEnum);
 
@@ -25,6 +25,12 @@ const UserStatusEnum = {
   invisible : "not-visible",
   busy : "busy",
 };
+
+const clientTypes = {
+  business: "business",
+  personal: "personal",
+};
+Object.freeze(clientTypes);
 
 //****** FEATURES ENUMS *******
 const FeaturesTypeEnum = {
@@ -55,6 +61,9 @@ const featuresCodeEnum = {
   features: "features",
   groups: "groups",
   users: "users",
+  clients : "clients",
+  orders :"orders",
+  products : "produsts"
 };
 Object.freeze(featuresCodeEnum);
 
@@ -96,5 +105,6 @@ export {
   featuresActionsEnum,
   UserLanguagesEnum,
   UserStatusEnum,
-  OrderTypes
+  OrderTypes,
+  clientTypes
 };

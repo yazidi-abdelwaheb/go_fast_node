@@ -13,7 +13,8 @@ export {
   featuresActionsEnum,
   UserLanguagesEnum,
   UserStatusEnum,
-  OrderTypes
+  OrderTypes,
+  clientTypes
 } from "./enums/enums.js";
 
 export {
@@ -47,6 +48,7 @@ export {
   TOKEN_EXPIRE_IN_SUPER,
   ATTEMPTS_OF_CODE_VALIDATION,
   ATTEMPTS_OF_CODE_VALIDATION_SUPER,
+  GROUP_ID_CLIENTS
 } from "./utils/const.js";
 
 export { uploadImage, createDirectoriesPhotos } from "./utils/multer.utils.js";

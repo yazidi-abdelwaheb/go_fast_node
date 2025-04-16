@@ -59,6 +59,10 @@ export const doc = {
       name: "Menu",
       description: "Endpoints for Menu option",
     },
+    {
+      name: "Clients",
+      description: "Endpoints or clients operations",
+    },
   ],
 };
 
