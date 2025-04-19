@@ -322,7 +322,7 @@ export default class MenuController {
         };
       });
   
-      res.status(200).json({ features: featuresAuth });
+      res.status(200).json( featuresAuth );
     } catch (e) {
       errorCatch(e, req, res);
     }
