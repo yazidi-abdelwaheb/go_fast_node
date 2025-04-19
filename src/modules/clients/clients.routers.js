@@ -54,7 +54,7 @@ routers.post(
       actions: [featuresActionsEnum.create],
     },
   ]),*/
-  /*createOneValidation,*/
+  createOneValidation,
   checkValidationErrors,
   controller.createOne
 );

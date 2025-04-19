@@ -7,7 +7,11 @@ const clientGroupMigration = async () => {
   try {
     // Your migration logic here
     await setupMongoServer()
-    await new Groups({
+    const exists = await Groups.exists({ _id: GROUP_ID_CLIENTS });
+    if(exists){
+      console.log("Group clients alredy exists!");
+    }else{
+      await new Groups({
       _id : new Types.ObjectId(GROUP_ID_CLIENTS),
       companyId : new Types.ObjectId(COMPANY_ID),
       label :"Clients",
@@ -15,6 +19,8 @@ const clientGroupMigration = async () => {
     }).save()
 
     console.log("Group clients created successfully.");
+    }
+    
     
   } catch (e) {
     console.error("An error occurred while running the migration: ", e);

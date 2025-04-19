@@ -17,7 +17,9 @@ const clientSchema = new Schema(
       length: [8, "Phone number be at 8 characters long"],
     },
     city : {
-        gouvernorat : String,
+        gouvernorat : {
+          type : String
+        },
         coordinates : [Number,Number]
     },
     accountType : {
