@@ -7,6 +7,7 @@ import {
   customValidatorUniqueValueForUpdate,
 } from "../../shared/shared.exports.js";
 import Users from "../users/users.schema.js";
+import Clients from "./clients.schema.js";
 
 const clientValidation = [
   /*body("client.companyId")
@@ -31,13 +32,13 @@ const clientValidation = [
     .withMessage("First name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("First name must be between 2 and 20 characters"),
-    body("user.password")
+  body("user.password")
     .trim()
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long"),
-    body("user.accountType")
+  body("user.accountType")
     .trim()
     .notEmpty()
     .withMessage("account type is required")
@@ -47,7 +48,37 @@ const clientValidation = [
       }
       return true;
     }),
+  body("user.city")
+    .trim()
+    .notEmpty()
+    .withMessage('The city field is required.')
+    .isObject()
+    .withMessage('The city must be an object.'),
 
+  body("user.city.gouvernorat")
+    .trim()
+    .notEmpty()
+    .withMessage('The gouvernorat field is required.')
+    .isString()
+    .withMessage('The gouvernorat must be a string.'),
+
+  body("user.city.coordinates")
+    .trim()
+    .notEmpty()
+    .withMessage('The coordinates field is required.')
+    .isArray({ min: 2, max: 2 })
+    .withMessage('The coordinates must be an array of two numbers.')
+    .custom((value) => {
+      if (!Array.isArray(value) || value.length !== 2) {
+        throw new Error(
+          'The coordinates array must contain exactly two values.'
+        );
+      }
+      if (!value.every((coord) => typeof coord === "number")) {
+        throw new Error('Each item in coordinates must be a number.');
+      }
+      return true;
+    }),
 ];
 
 export const createOneValidation = [
@@ -59,6 +90,19 @@ export const createOneValidation = [
     .custom(async (value) => {
       await customValidatorUniqueValueForInsert(Users, "email", {
         email: value.trim().toLowerCase(),
+      });
+    }),
+  body("user.phone")
+    .trim()
+    .notEmpty()
+    .withMessage("Phone number is required.")
+    .isLength({ min: 8, max: 8 })
+    .withMessage("Phone number must be exactly 8 digits long.")
+    .isNumeric()
+    .withMessage("Phone number must contain only numbers.")
+    .custom(async (value) => {
+      await customValidatorUniqueValueForInsert(Clients, "Phone", {
+        phone: value.trim().toLowerCase(),
       });
     }),
 ];
@@ -86,6 +130,19 @@ export const updateOneValidation = [
         { code: value.trim().toLowerCase() },
         meta.req.params.id
       );
+    }),
+    body("user.phone")
+    .trim()
+    .notEmpty()
+    .withMessage("Phone number is required.")
+    .isLength({ min: 8, max: 8 })
+    .withMessage("Phone number must be exactly 8 digits long.")
+    .isNumeric()
+    .withMessage("Phone number must contain only numbers.")
+    .custom(async (value) => {
+      await customValidatorUniqueValueForUpdate(Clients, "Phone", {
+        phone: value.trim().toLowerCase(),
+      });
     }),
 ];
 
@@ -126,4 +183,3 @@ export const updateMyAccountValidation = [
 ];
 
 export const deleteOneValidation = [...readOneValidation];
-

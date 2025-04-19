@@ -14,7 +14,9 @@ const clientSchema = new Schema(
       type : String,
       math: /^[+ 0-9]+$/,
       trim : true,
-      length: [8, "Phone number be at 8 characters long"],
+      required : [true , "Phone number is required"],
+      length: [8, "Phone number must be exactly 8 digits long"],
+      unique : [true , "Phone number is unique"],
     },
     city : {
         gouvernorat : {

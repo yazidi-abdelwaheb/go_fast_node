@@ -93,12 +93,15 @@ export default class ClientsController extends UsersController {
             content: {
                 "application/json": {
                     example:{
-                     client : {
+                     user : {
                       first_name: "John",
                       last_name: "Smith",
                       email: "john@example.com",
                       password: "1234567a",   
-                      city : "nabeul",
+                      city : {
+                        gouvernorat : "nabeul",
+                        coordinates : [1500 , 16000]
+                      },
                       phone : "26727168",
                       accountType : "personal"
                      }
