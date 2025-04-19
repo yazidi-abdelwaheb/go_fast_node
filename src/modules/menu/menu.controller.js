@@ -34,7 +34,7 @@ export default class MenuController {
           update: true,
           read: true,
           type: feature.type,
-          divider : feature.divider,
+          divider: feature.divider,
           children: [],
         }));
       } else {
@@ -99,7 +99,7 @@ export default class MenuController {
           read: feature.read || false,
           type: feature.featureId.type,
           status: feature.status,
-          divider : feature.featureId.divider,
+          divider: feature.featureId.divider,
           children: [],
         }));
 
@@ -118,7 +118,7 @@ export default class MenuController {
           read: feature.read || false,
           type: feature.featureId.type,
           status: feature.status,
-          divider : feature.featureId.divider,
+          divider: feature.featureId.divider,
           children: [],
         }));
 
@@ -169,12 +169,9 @@ export default class MenuController {
         data.push(group);
       }
 
-      
-      
-
       const finalData = [];
-      data.forEach((item,index) => {
-        if (item.divider && index!=0) {
+      data.forEach((item, index) => {
+        if (item.divider && index != 0) {
           // Add divider before the item
           finalData.push({
             type: "divider",
@@ -224,4 +221,111 @@ export default class MenuController {
       errorCatch(e, req, res);
     }
   }
+
+  static async getMyActions(req, res) {
+    try {
+      let features = [];
+  
+      // Si c'est un super utilisateur : récupérer toutes les features actives
+      if (req.user.type === "super") {
+        const featureList = await Features.find({ status: featureStatus.active }).lean();
+        features = featureList.map((feature) => ({
+          code: feature.code,
+          create: true,
+          read: true,
+          update: true,
+          delete: true,
+        }));
+      } else {
+        const userId = new Types.ObjectId(req.user._id);
+        const groupId = req.user.groupId ? new Types.ObjectId(req.user.groupId) : null;
+  
+        const userFeatures = await UserFeature.aggregate([
+          { $match: { userId } },
+          {
+            $lookup: {
+              from: "features",
+              localField: "featureId",
+              foreignField: "_id",
+              as: "feature",
+            },
+          },
+          { $unwind: "$feature" },
+          { $match: { "feature.status": featureStatus.active } },
+          {
+            $project: {
+              _id: 0,
+              code: "$feature.code",
+              create: "$create",
+              read: "$read",
+              update: "$update",
+              delete: "$delete",
+            },
+          },
+        ]);
+  
+        let groupFeatures = [];
+        if (groupId) {
+          groupFeatures = await GroupFeature.aggregate([
+            { $match: { groupId } },
+            {
+              $lookup: {
+                from: "features",
+                localField: "featureId",
+                foreignField: "_id",
+                as: "feature",
+              },
+            },
+            { $unwind: "$feature" },
+            { $match: { "feature.status": featureStatus.active } },
+            {
+              $project: {
+                _id: 0,
+                code: "$feature.code",
+                create: "$create",
+                read: "$read",
+                update: "$update",
+                delete: "$delete",
+              },
+            },
+          ]);
+        }
+  
+        const combined = {};
+  
+        // Fusion des droits utilisateur + groupe
+        [...groupFeatures, ...userFeatures].forEach((f) => {
+          if (!combined[f.code]) {
+            combined[f.code] = { ...f };
+          } else {
+            combined[f.code].create ||= f.create;
+            combined[f.code].read ||= f.read;
+            combined[f.code].update ||= f.update;
+            combined[f.code].delete ||= f.delete;
+          }
+        });
+  
+        features = Object.values(combined);
+      }
+  
+      // Format final
+      const featuresAuth = features.map((f) => {
+        const actions = [];
+        if (f.create) actions.push("create");
+        if (f.read) actions.push("read");
+        if (f.update) actions.push("update");
+        if (f.delete) actions.push("delete");
+  
+        return {
+          code: f.code,
+          actions,
+        };
+      });
+  
+      res.status(200).json({ features: featuresAuth });
+    } catch (e) {
+      errorCatch(e, req, res);
+    }
+  }
+  
 }
