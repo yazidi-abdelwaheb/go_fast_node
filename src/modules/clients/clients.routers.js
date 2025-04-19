@@ -31,7 +31,7 @@ routers.get(
 // ****** get all client ****** //
 routers.get("/all", controller.getAll);
 // ****** get info client connected ******** //
-routers.get("/me", controller.me);
+//routers.get("/me", controller.me);
 
 routers.get(
   "/:id",

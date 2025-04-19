@@ -59,8 +59,10 @@ export const customValidatorUniqueValueForUpdate = async (
   query,
   reqId
 ) => {
+  
+  
   const data = await model.findOne(query);
-  if (data && data._id != reqId) {
+  if (data && data._id.toString() != reqId) {
     throw new Error(`the ${field} already in use.`);
   }
   return true;

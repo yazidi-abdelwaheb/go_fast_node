@@ -91,10 +91,11 @@ export const updateOneValidation = [
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
     .custom(async (value, meta) => {
+      
       await customValidatorUniqueValueForUpdate(
         Users,
         "email",
-        { code: value.trim().toLowerCase() },
+        { email: value.trim().toLowerCase() },
         meta.req.params.id
       );
     }),
