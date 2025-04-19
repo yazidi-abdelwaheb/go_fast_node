@@ -108,34 +108,38 @@ export default class ClientsController extends UsersController {
         }
     
      */
+    let newUser;
     try {
-      const client  = req.body.user;
+      const {user}  = req.body;
 
-      const newUser = await new Users({
-        first_name: client.first_name,
-        last_name: client.last_name,
-        email: client.email,
-        password: client.password,
+      newUser = await new Users({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        password: user.password,
         companyId: req.user.companyId,
         type: UserTypeEnum.clinet,
         groupId: GROUP_ID_CLIENTS,
         isActive: true,
         new: {
           value: true,
-          password: client.password,
+          password: user.password,
         },
       }).save();
 
       await new model({
         userId: newUser._id,
-        city: client.city,
-        type: client.type,
-        phone: client.phone,
-        accountType: client.accountType,
+        city: user.city,
+        type: user.type,
+        phone: user.phone,
+        accountType: user.accountType,
       }).save();
 
       res.status(201).json({ message: "Clients created successfully." });
     } catch (error) {
+      if (newUser && newUser._id) {
+        await Users.deleteOne({ _id: newUser._id });
+      }
       errorCatch(error, req, res);
     }
   }
@@ -147,8 +151,14 @@ export default class ClientsController extends UsersController {
      */
     try {
       const userId = req.params.id;
-      const user = await model.findById(userId).populate("userId");
-      res.status(200).json(user);
+      const client = await model.findById(userId).populate("userId").lean();
+      const data = {
+        ...client.userId,
+        ...client,
+        userId : undefined
+      }
+      
+      res.status(200).json(data);
     } catch (error) {
       errorCatch(error, req, res);
     }

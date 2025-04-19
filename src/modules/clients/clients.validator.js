@@ -1,6 +1,7 @@
 import { body, param } from "express-validator";
 import clients from "./clients.schema.js";
 import {
+  clientTypes,
   customValidatorId,
   customValidatorUniqueValueForInsert,
   customValidatorUniqueValueForUpdate,
@@ -17,30 +18,41 @@ const clientValidation = [
     .custom(async (value) => {
        await customValidatorId(Company, value, "company");
     }),*/
-  body("client.last_name")
+  body("user.last_name")
     .trim()
     .notEmpty()
     .withMessage("Last name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("Last name must be between 2 and 20 characters"),
 
-  body("client.first_name")
+  body("user.first_name")
     .trim()
     .notEmpty()
     .withMessage("First name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("First name must be between 2 and 20 characters"),
-    body("client.password")
+    body("user.password")
     .trim()
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long"),
+    body("user.accountType")
+    .trim()
+    .notEmpty()
+    .withMessage("account type is required")
+    .custom(async (value) => {
+      if (!Object.values(clientTypes).includes(value)) {
+        throw new Error("account type invalid");
+      }
+      return true;
+    }),
+
 ];
 
 export const createOneValidation = [
   ...clientValidation,
-  body("client.email")
+  body("user.email")
     .isEmail()
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
@@ -63,7 +75,7 @@ export const readOneValidation = [
 export const updateOneValidation = [
   ...readOneValidation,
   ...clientValidation,
-  body("client.email")
+  body("user.email")
     .isEmail()
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
@@ -78,7 +90,7 @@ export const updateOneValidation = [
 ];
 
 export const updateMyAccountValidation = [
-  body("client.email")
+  body("user.email")
     .isEmail()
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
@@ -91,21 +103,21 @@ export const updateMyAccountValidation = [
       );
     }),
 
-  body("client.last_name")
+  body("user.last_name")
     .trim()
     .notEmpty()
     .withMessage("Last name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("Last name must be between 2 and 20 characters"),
 
-  body("client.first_name")
+  body("user.first_name")
     .trim()
     .notEmpty()
     .withMessage("First name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("First name must be between 2 and 20 characters"),
 
-  body("client.password")
+  body("user.password")
     .trim()
     .notEmpty()
     .withMessage("Password is required")
