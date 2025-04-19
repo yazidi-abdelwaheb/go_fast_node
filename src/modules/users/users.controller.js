@@ -186,19 +186,20 @@ export default class UsersController  {
     try {
       const _id = req.params.id;
       const { user } = req.body;
-      const updateData = {
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        password: user.password,
-        groupId: user.groupId,
-      };
+      const userData = await model.findById(_id)
+      
+      userData.first_name= user.first_name
+      userData.last_name= user.last_name
+      userData.email= user.email
+      userData.groupId= user.groupId
+      
 
-      if (user.new && user.new.value) {
-        updateData["new.password"] = user.password;
+      if (userData.new && userData.new.value) {
+        userData.password = user.password;
+        updateData.new.password = user.password;
       }
 
-      await model.updateOne({ _id }, updateData);
+      await userData.save()
 
       res.status(200).json({ message: "user updated successfully." });
     } catch (error) {

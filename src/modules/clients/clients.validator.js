@@ -48,34 +48,31 @@ const clientValidation = [
       }
       return true;
     }),
-  body("user.city")
+  /*body("user.city")
     .trim()
     .notEmpty()
     .withMessage('The city field is required.')
     .isObject()
-    .withMessage('The city must be an object.'),
+    .withMessage('The city must be an object.'),*/
 
   body("user.city.gouvernorat")
     .trim()
     .notEmpty()
-    .withMessage('The gouvernorat field is required.')
+    .withMessage("The gouvernorat field is required.")
     .isString()
-    .withMessage('The gouvernorat must be a string.'),
+    .withMessage("The gouvernorat must be a string."),
 
   body("user.city.coordinates")
     .trim()
     .notEmpty()
-    .withMessage('The coordinates field is required.')
+    .withMessage("The coordinates field is required.")
     .isArray({ min: 2, max: 2 })
-    .withMessage('The coordinates must be an array of two numbers.')
+    .withMessage("The coordinates must be an array of two numbers.")
     .custom((value) => {
       if (!Array.isArray(value) || value.length !== 2) {
         throw new Error(
-          'The coordinates array must contain exactly two values.'
+          "The coordinates array must contain exactly two values."
         );
-      }
-      if (!value.every((coord) => typeof coord === "number")) {
-        throw new Error('Each item in coordinates must be a number.');
       }
       return true;
     }),
@@ -119,19 +116,27 @@ export const readOneValidation = [
 export const updateOneValidation = [
   ...readOneValidation,
   ...clientValidation,
+
+
+  
   body("user.email")
     .isEmail()
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
     .custom(async (value, meta) => {
+      const client = await Clients.findById(meta.req.params.id)
+      const userId = client.userId.toString()
       await customValidatorUniqueValueForUpdate(
-        clients,
-        "email",
-        { code: value.trim().toLowerCase() },
-        meta.req.params.id
-      );
-    }),
-    body("user.phone")
+        Users,
+        'email',
+        {email : value.trim().toLowerCase()},
+        userId
+      )
+      
+    })
+  ,
+
+  /*body("user.phone")
     .trim()
     .notEmpty()
     .withMessage("Phone number is required.")
@@ -139,11 +144,16 @@ export const updateOneValidation = [
     .withMessage("Phone number must be exactly 8 digits long.")
     .isNumeric()
     .withMessage("Phone number must contain only numbers.")
-    .custom(async (value) => {
-      await customValidatorUniqueValueForUpdate(Clients, "Phone", {
-        phone: value.trim().toLowerCase(),
-      });
-    }),
+    .custom(async (value, meta) => {
+      await customValidatorUniqueValueForUpdate(
+        Clients,
+        "Phone",
+        {
+          phone: value.trim().toLowerCase(),
+        },
+        meta.req.params.id
+      );
+    }),*/
 ];
 
 export const updateMyAccountValidation = [

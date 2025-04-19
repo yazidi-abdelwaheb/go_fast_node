@@ -12,7 +12,7 @@ import Users from "../users/users.schema.js";
 import Clients from "./clients.schema.js";
 
 const model = Clients;
-export default class ClientsController extends UsersController {
+export default class ClientsController {
   static async getList(req, res) {
     /**
      *
@@ -113,8 +113,7 @@ export default class ClientsController extends UsersController {
      */
     let newUser;
     try {
-      const {user}  = req.body;
-
+      const { user } = req.body;
       newUser = await new Users({
         first_name: user.first_name,
         last_name: user.last_name,
@@ -158,9 +157,9 @@ export default class ClientsController extends UsersController {
       const data = {
         ...client.userId,
         ...client,
-        userId : undefined
-      }
-      
+        userId: undefined,
+      };
+
       res.status(200).json(data);
     } catch (error) {
       errorCatch(error, req, res);
@@ -176,47 +175,55 @@ export default class ClientsController extends UsersController {
             content: {
                 "application/json": {
                     example:{
-                     user :  {
+                     user : {
                       first_name: "John",
                       last_name: "Smith",
                       email: "john@example.com",
-                      password: "1234567a",
-                      type: "user",
-                      groupId: "groupId",
-                      lang : "en",  
-                      }
+                      password: "1234567a",   
+                      city : {
+                        gouvernorat : "nabeul",
+                        coordinates : [1500 , 16000]
+                      },
+                      phone : "26727168",
+                      accountType : "personal"
+                     }
                     }
                 }
             }
         }
      */
     try {
-      const { client } = req.body;
+      const { user } = req.body;
       const _id = req.params.id;
+      const client = await model.findById(_id);
+      const userId = client.userId.toString();
 
-      const updateDataUser = {
-        first_name: client.userId.first_name,
-        last_name: client.userId.last_name,
-        email: client.userId.email,
-        password: client.userId.password,
-      };
-
-      if (client.userId.new && client.userId.new.value) {
-        updateDataUser["new.password"] = client.userId.password;
-      }
-
-      await Users.updateOne({ _id: client.userId._id }, updateDataUser);
-
-      await model.updateOne(
-        { _id },
+      const userData = await Users.findByIdAndUpdate(
+        userId,
         {
-          city: client.city,
-          type: client.type,
-          phone: client.phone,
-        }
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+        },
+        { new: true }
       );
 
-      res.status(200).json({ message: "user updated successfully." });
+      // case : update password if user is new
+      if (userData.new && userData.new.value) {
+        userData.password = user.password;
+        userData.new.password = user.password;
+        await userData.save();
+      }
+      client.city = {
+        gouvernorat: user.city.gouvernorat,
+        coordinates: user.city.coordinates,
+      };
+      client.accountType = user.accountType;
+      client.phone = user.phone;
+
+      await client.save()
+
+      res.status(200).json({ message: "client updated successfully." });
     } catch (error) {
       errorCatch(error, req, res);
     }
