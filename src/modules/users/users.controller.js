@@ -27,7 +27,7 @@ export default class UsersController  {
       const filterNewOld = req.query.filterNewOld || "";
       const filtergroup = req.query.filtergroups || "";
 
-      const filter = { type: { $ne: "super" } };
+      const filter = { type: UserTypeEnum.user };
       if (filterStatus) {
         filter.status = { $in: filterStatus.split(",") };
       }
@@ -84,6 +84,7 @@ export default class UsersController  {
         {
           companyId: req.user.companyId,
           _id: { $ne: req.user._id },
+          type : UserTypeEnum.user
         },
         {
           first_name: 1,

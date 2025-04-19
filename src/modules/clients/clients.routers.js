@@ -6,8 +6,6 @@ import {
   updateOneValidation,
   deleteOneValidation,
   updateMyAccountValidation,
-  updateMyLanguageValidation,
-  updateMyStatusValidation,
 } from "./clients.validator.js";
 import {
   checkValidationErrors,
@@ -42,9 +40,9 @@ routers.get(
       code: featuresCodeEnum.users,
       actions: [featuresActionsEnum.read],
     },
-  ]),
+  ]),*/
   readOneValidation,
-  checkValidationErrors,*/
+  checkValidationErrors,
   controller.readOne
 );
 
@@ -55,9 +53,9 @@ routers.post(
       code: featuresCodeEnum.users,
       actions: [featuresActionsEnum.create],
     },
-  ]),
+  ]),*/
   createOneValidation,
-  checkValidationErrors,*/
+  checkValidationErrors,
   controller.createOne
 );
 
@@ -68,10 +66,10 @@ routers.put(
       code: featuresCodeEnum.users,
       actions: [featuresActionsEnum.update],
     },
-  ]),
+  ]),*/
 
   updateOneValidation,
-  checkValidationErrors,*/
+  checkValidationErrors,
   controller.updateOne
 );
 
@@ -82,9 +80,9 @@ routers.delete(
       code: featuresCodeEnum.clinet,
       actions: [featuresActionsEnum.delete],
     },
-  ]),
+  ]),*/
   deleteOneValidation,
-  checkValidationErrors,*/
+  checkValidationErrors,
   controller.deleteOne
 );
 
