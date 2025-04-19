@@ -72,7 +72,7 @@ export default class ClientsController extends UsersController {
   static async getAll(req, res) {
     /**
      *
-     * #swagger.summary = "get List all Users"
+     * #swagger.summary = "get List all clients"
      *
      */
     try {
@@ -86,7 +86,7 @@ export default class ClientsController extends UsersController {
   static async createOne(req, res) {
     /**
      * 
-     * #swagger.summary = "create a new user"
+     * #swagger.summary = "create a new client"
      * 
      * #swagger.requestBody = {
             required: true,
@@ -99,9 +99,8 @@ export default class ClientsController extends UsersController {
                       email: "john@example.com",
                       password: "1234567a",   
                       city : "nabeul",
-                      type : "business",
                       phone : "26727168",
-                      accountType : "personel"
+                      accountType : "personal"
                      }
                     }
                 }
@@ -144,7 +143,7 @@ export default class ClientsController extends UsersController {
   static async readOne(req, res) {
     /**
      *
-     * #swagger.summary = "Read one by Id of users."
+     * #swagger.summary = "Read one by Id of clients."
      */
     try {
       const userId = req.params.id;
@@ -158,7 +157,7 @@ export default class ClientsController extends UsersController {
   static async updateOne(req, res) {
     /**
      * 
-     * #swagger.summary = "update one of users."
+     * #swagger.summary = "update one of client."
      * #swagger.requestBody = {
             required: true,
             content: {
@@ -213,7 +212,7 @@ export default class ClientsController extends UsersController {
   static async deleteOne(req, res) {
     /**
      *
-     * #swagger.summary ="Delete one of users."
+     * #swagger.summary ="Delete one of client."
      */
     try {
       const _id = req.params.id;
@@ -221,21 +220,6 @@ export default class ClientsController extends UsersController {
       await Users.deleteOne({ _id: client.userId });
 
       res.status(200).json({ message: "client deleted successfully." });
-    } catch (error) {
-      errorCatch(error, req, res);
-    }
-  }
-
-  static async me(req, res) {
-    /**
-     *
-     * #swagger.summary = Get Info user connected
-     */
-    try {
-      const { _id } = req.user;
-      const user = await model.findOne({ _id }).populate("userId");
-
-      res.status(200).json(user);
     } catch (error) {
       errorCatch(error, req, res);
     }

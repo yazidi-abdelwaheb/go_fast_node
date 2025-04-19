@@ -1,18 +1,14 @@
 import { body, param } from "express-validator";
-import Users from "./clients.schema.js";
-import Company from "../companys/companys.schema.js";
+import clients from "./clients.schema.js";
 import {
   customValidatorId,
   customValidatorUniqueValueForInsert,
   customValidatorUniqueValueForUpdate,
-  UserLanguagesEnum,
-  UserStatusEnum,
-  UserTypeEnum,
 } from "../../shared/shared.exports.js";
-import Groups from "../groups/groups.schema.js";
+import Users from "../users/users.schema.js";
 
-const userValidation = [
-  /*body("user.companyId")
+const clientValidation = [
+  /*body("client.companyId")
     .trim()
     .notEmpty()
     .withMessage("company Id is required")
@@ -21,43 +17,30 @@ const userValidation = [
     .custom(async (value) => {
        await customValidatorId(Company, value, "company");
     }),*/
-  body("user.last_name")
+  body("client.last_name")
     .trim()
     .notEmpty()
     .withMessage("Last name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("Last name must be between 2 and 20 characters"),
 
-  body("user.first_name")
+  body("client.first_name")
     .trim()
     .notEmpty()
     .withMessage("First name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("First name must be between 2 and 20 characters"),
-  body("user.groupId._id")
+    body("client.password")
     .trim()
     .notEmpty()
-    .withMessage("group Id  is required")
-    .isMongoId()
-    .withMessage("invalid id")
-    .custom(async (value) => {
-      await customValidatorId(Groups, value, "Group");
-    }),
-  body("user.type")
-    .trim()
-    .notEmpty()
-    .withMessage("Type is required")
-    .custom(async (value) => {
-      if (!Object.values(UserTypeEnum).includes(value.toLowerCase())) {
-        throw new Error("Type invalid");
-      }
-      return true;
-    }),
+    .withMessage("Password is required")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters long"),
 ];
 
 export const createOneValidation = [
-  ...userValidation,
-  body("user.email")
+  ...clientValidation,
+  body("client.email")
     .isEmail()
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
@@ -73,26 +56,20 @@ export const readOneValidation = [
     .isMongoId()
     .withMessage("invalid id")
     .custom(async (value) => {
-      await customValidatorId(Users, value, "user");
+      await customValidatorId(clients, value, "client");
     }),
 ];
 
 export const updateOneValidation = [
   ...readOneValidation,
-  ...userValidation,
-  body("user.password")
-    .trim()
-    .notEmpty()
-    .withMessage("Password is required")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters long"),
-  body("user.email")
+  ...clientValidation,
+  body("client.email")
     .isEmail()
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
     .custom(async (value, meta) => {
       await customValidatorUniqueValueForUpdate(
-        Users,
+        clients,
         "email",
         { code: value.trim().toLowerCase() },
         meta.req.params.id
@@ -101,71 +78,40 @@ export const updateOneValidation = [
 ];
 
 export const updateMyAccountValidation = [
-  body("user.email")
+  body("client.email")
     .isEmail()
     .withMessage("Must be a valid email address.")
     .normalizeEmail()
     .custom(async (value, meta) => {
       return await customValidatorUniqueValueForUpdate(
-        Users,
+        clients,
         "email",
         { code: value.trim().toLowerCase() },
-        meta.req.user._id
+        meta.req.client._id
       );
     }),
 
-  body("user.last_name")
+  body("client.last_name")
     .trim()
     .notEmpty()
     .withMessage("Last name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("Last name must be between 2 and 20 characters"),
 
-  body("user.first_name")
+  body("client.first_name")
     .trim()
     .notEmpty()
     .withMessage("First name is required")
     .isLength({ min: 2, max: 20 })
     .withMessage("First name must be between 2 and 20 characters"),
 
-  body("user.password")
+  body("client.password")
     .trim()
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long"),
-  body("user.lang").custom(async (value) => {
-    if (value && !Object.values(UserLanguagesEnum).includes(value)) {
-      throw new Error("Invalid language.");
-    }
-    return true;
-  }),
 ];
 
 export const deleteOneValidation = [...readOneValidation];
 
-export const updateMyLanguageValidation = [
-  body("lang")
-  .trim()
-  .notEmpty()
-  .withMessage("Language is required!")
-  .custom(async (value) => {
-    if (!Object.values(UserLanguagesEnum).includes(value)) {
-      throw new Error("Invalid language.");
-    }
-    return true;
-  }),
-];
-
-export const updateMyStatusValidation = [
-  body("status")
-  .trim()
-  .notEmpty()
-  .withMessage("status is required!")
-  .custom(async (value) => {
-    if (!Object.values(UserStatusEnum).includes(value)) {
-      throw new Error("Invalid status.");
-    }
-    return true;
-  }),
-];
