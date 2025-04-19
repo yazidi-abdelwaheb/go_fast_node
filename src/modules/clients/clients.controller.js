@@ -109,7 +109,7 @@ export default class ClientsController extends UsersController {
     
      */
     try {
-      const { client } = req.body;
+      const client  = req.body.user;
 
       const newUser = await new Users({
         first_name: client.first_name,
